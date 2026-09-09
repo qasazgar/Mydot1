@@ -1,0 +1,75 @@
+info:
+  name: Send Otp mobile
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: https://api-stage.dpsb.ir/mydot/api/v1/auth/superapp/login/
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: Cookie
+      value: csrftoken=hClQySoT20uEeTTdVs97gtqtE3inNSLf; sessionid=32gv12v0vjfc9fqc0cw9bjdz91fr436f; _dd_s=logs=1&id=f70b88c8-61a4-481a-9adf-aa2822ad4e49&created=1788939051141&expire=1788939981156
+    - name: origin
+      value: https://stage.dpsb.ir
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://stage.dpsb.ir/
+    - name: sec-ch-ua
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
+    - name: sec-ch-ua-mobile
+      value: ?1
+    - name: sec-ch-ua-platform
+      value: '"iOS"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
+  body:
+    type: json
+    data: |-
+      {
+        "phone_number": "+989127988406"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const response = res.getBody();
+
+        bru.setVar("otp", response.otp);
+        bru.setVar("pre_auth_token", response.pre_auth_token);
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 202", function() {
+            expect(res.status).to.equal(202);
+          });
+
+          test("Response time should be less than 500 ms", function() {
+            expect(res.responseTime).to.be.lessThan(500);
+          });
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

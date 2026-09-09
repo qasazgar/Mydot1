@@ -1,17 +1,6 @@
 pipeline {
     agent any
 
-    options {
-        disableConcurrentBuilds()
-
-        buildDiscarder(
-            logRotator(
-                numToKeepStr: '20',
-                artifactNumToKeepStr: '10'
-            )
-        )
-    }
-
     stages {
 
         stage('Checkout') {
@@ -24,9 +13,6 @@ pipeline {
             steps {
                 sh '''
                     echo "======================================"
-                    echo " Environment Check"
-                    echo "======================================"
-
                     echo "Node version:"
                     node --version
 
@@ -45,64 +31,217 @@ pipeline {
             steps {
                 sh '''
                     rm -rf reports
+                    rm -rf temp-reports
+                    rm -rf test-logs
+
                     mkdir -p reports
+                    mkdir -p temp-reports
+                    mkdir -p test-logs
                 '''
             }
         }
 
-        stage('Run Check Login Tests') {
+        stage('Run All Scenarios') {
             steps {
-                sh '''
-                    echo "======================================"
-                    echo " Running Check Login E2E Tests"
-                    echo "======================================"
+                script {
 
-                    bru run "Check login" \
-                        --env Stage \
-                        --reporter-junit reports/check-login-junit.xml \
-                        --reporter-html reports/check-login-report.html
+                    def defaultEnv = 'SuperApp-dev-BDD'
 
-                    echo "======================================"
-                    echo " Check Login Tests Completed"
-                    echo "======================================"
-                '''
+                    def scenarios = [
+
+                        // =====================================================
+                        // 01 - End To End (Run with SuperApp-dev)
+                        // =====================================================
+                        [
+                            name: 'Check login',
+                            path: 'Check login',
+                            env: 'Stage'
+                        ],
+
+                        // =====================================================
+                        // 02 - Login (Run with SuperApp-dev-BDD)
+                        // =====================================================
+                        [
+                            name: 'Login',
+                            path: 'MD-T38Login with a valid phone number and incorrect password'
+                            env: 'Stage'
+
+                        ],
+                        [
+                            name: 'Login',
+                            path: 'MD-T39Login with a valid username and incorrect password'
+                        ],
+                        [
+                            name: 'Login',
+                            path: 'MD-T40Login using OTP with a phone number'
+                        ]
+                     
+                    ]
+
+                    // =========================================================
+                    // Test Execution
+                    // =========================================================
+                    def failedTests = []
+
+                    echo ""
+                    echo "=============================================="
+                    echo "TOTAL SCENARIOS: ${scenarios.size()}"
+                    echo "=============================================="
+
+                    for (scenario in scenarios) {
+
+                        def targetEnv = scenario.env ?: defaultEnv
+
+                        echo ""
+                        echo "=============================================="
+                        echo "Running Scenario: ${scenario.name}"
+                        echo "Path: ${scenario.path}"
+                        echo "Environment: ${targetEnv}"
+                        echo "=============================================="
+
+                        def junitFile = "temp-reports/${scenario.name}-junit.xml"
+                        def htmlFile = "reports/${scenario.name}-report.html"
+                        def logFile = "test-logs/${scenario.name}.log"
+
+                        def result = sh(
+                            script: """#!/bin/bash
+set +e
+set -o pipefail
+
+bru run "${scenario.path}" \\
+    --env "${targetEnv}" \\
+    --reporter-junit "${junitFile}" \\
+    --reporter-html "${htmlFile}" \\
+    2>&1 | tee "${logFile}"
+
+EXIT_CODE=\$?
+
+echo ""
+echo "Bruno Exit Code: \$EXIT_CODE"
+
+exit \$EXIT_CODE
+""",
+                            returnStatus: true
+                        )
+
+                        if (result != 0) {
+                            failedTests.add(scenario.name)
+                            echo ""
+                            echo "❌ FAILED: ${scenario.name}"
+                            echo "Exit Code: ${result}"
+                        } else {
+                            echo ""
+                            echo "✅ PASSED: ${scenario.name}"
+                        }
+
+                        echo ""
+                    }
+
+                    // =========================================================
+                    // Save Failed Tests
+                    // =========================================================
+                    writeFile(
+                        file: 'reports/failed-tests.txt',
+                        text: failedTests.join('\n')
+                    )
+
+                    // =========================================================
+                    // Test Execution Summary
+                    // =========================================================
+                    def totalTests = scenarios.size()
+                    def failedCount = failedTests.size()
+                    def passedCount = totalTests - failedCount
+
+                    echo ""
+                    echo "=============================================="
+                    echo "TEST EXECUTION SUMMARY"
+                    echo "=============================================="
+                    echo "Total Scenarios : ${totalTests}"
+                    echo "Passed          : ${passedCount}"
+                    echo "Failed          : ${failedCount}"
+                    echo "=============================================="
+
+                    if (failedCount > 0) {
+                        echo ""
+                        echo "Failed Scenarios:"
+                        echo "----------------------------------------------"
+                        failedTests.each {
+                            echo "❌ ${it}"
+                        }
+                        echo "----------------------------------------------"
+                        currentBuild.result = 'UNSTABLE'
+                    } else {
+                        echo ""
+                        echo "🎉 ALL SCENARIOS PASSED"
+                    }
+
+                    echo "=============================================="
+                }
             }
         }
     }
 
+    // ========================================================================
+    // POST ACTIONS
+    // ========================================================================
     post {
 
         always {
-            echo "======================================"
-            echo " Publishing Test Results"
-            echo "======================================"
+            echo ""
+            echo "Publishing Jenkins JUnit Test Reports..."
 
             junit(
+                testResults: 'temp-reports/*-junit.xml',
                 allowEmptyResults: true,
-                testResults: 'reports/*-junit.xml'
+                skipPublishingChecks: false
             )
 
             archiveArtifacts(
-                artifacts: 'reports/*.html',
-                allowEmptyArchive: true
+                artifacts: 'reports/**/*.html, reports/failed-tests.txt, test-logs/**/*.log',
+                allowEmptyArchive: true,
+                fingerprint: true
             )
+        }
 
-            echo "======================================"
+        unstable {
+            echo ""
+            echo "=============================================="
+            echo "⚠️ TESTS FAILED (BUILD UNSTABLE)"
+            echo "=============================================="
+
+            script {
+                if (fileExists('reports/failed-tests.txt')) {
+                    def failed = readFile('reports/failed-tests.txt').trim()
+                    if (failed) {
+                        echo ""
+                        echo "Failed scenarios detail:"
+                        echo "----------------------------------------------"
+                        echo failed
+                        echo "----------------------------------------------"
+                    }
+                }
+            }
         }
 
         success {
-            echo "======================================"
-            echo " CHECK LOGIN TESTS PASSED"
-            echo " No SMS will be sent."
-            echo "======================================"
+            echo ""
+            echo "=============================================="
+            echo "✅ ALL TESTS PASSED"
+            echo "=============================================="
         }
 
         failure {
-            echo "======================================"
-            echo " CHECK LOGIN TESTS FAILED"
-            echo " Running SendSmsFail..."
-            echo "======================================"
+            echo ""
+            echo "=============================================="
+            echo "❌ PIPELINE FAILED"
+            echo "=============================================="
+        }
 
+        cleanup {
+            echo ""
+            echo "=============================================="
+            echo "Jenkins Test Execution Completed"
+            echo "=============================================="
         }
     }
 }

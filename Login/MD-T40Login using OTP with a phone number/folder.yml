@@ -1,0 +1,21 @@
+info:
+  name: MD-T40Login using OTP with a phone number
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    # **Login using OTP with a phone number**
+
+    \
+    **Given** the user chooses the OTP login method 
+
+    **When** the user enters the registered phone number 
+
+    **And** requests an OTP And enters the correct OTP 
+
+    **Then** the user should be logged in successfully
+  type: text/markdown

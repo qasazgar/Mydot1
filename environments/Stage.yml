@@ -12,3 +12,9 @@ variables:
   - name: dot_id_Quote
     value: ""
     description: ""
+  - name: otp
+    value: ""
+    description: ""
+  - name: pre_auth_token
+    value: ""
+    description: ""

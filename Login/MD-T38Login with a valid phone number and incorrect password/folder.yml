@@ -1,0 +1,7 @@
+info:
+  name: MD-T38Login with a valid phone number and incorrect password
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit

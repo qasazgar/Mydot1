@@ -1,0 +1,7 @@
+info:
+  name: MD-T39Login with a valid username and incorrect password
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit
