@@ -1,16 +1,16 @@
 info:
-  name: "Repost Post "
+  name: Repost Post
   type: http
   seq: 7
 
 http:
   method: post
-  url: https://api.mydot.one/mydot/api/v1/dots/
+  url: https://api-stage.dpsb.ir/mydot/api/v1/dots/
   headers:
     - name: sec-ch-ua-platform
       value: '"iOS"'
     - name: Referer
-      value: https://mydot.one/
+      value: https://stage.dpsb.ir/
     - name: User-Agent
       value: Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
     - name: Accept
@@ -28,9 +28,9 @@ http:
         "dot_type": "repost",
         "reply_to": null,
         "repost_of": "{{dot_id}}",
-        "quote_of": null,
+        "quote_of": "{{dot_id}}",
         "media_ids": [],
-        "reply_permission": "everyone",
+        "reply_permission": "followers",
         "publication_status": "published"
       }
   auth: inherit
