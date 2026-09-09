@@ -1,7 +1,7 @@
-name: Dev
+name: Stage
 variables:
   - name: Url
-    value: https://api.mydot.one/mydot/api/v1
+    value: https://api-stage.dpsb.ir/mydot/api/v1
     description: ""
   - name: access_token
     value: ""
