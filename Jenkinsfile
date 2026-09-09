@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -50,18 +49,12 @@ pipeline {
 
                     def scenarios = [
 
-                        // =====================================================
-                        // 01 - End To End
-                        // =====================================================
                         [
                             name: 'Check login',
                             path: 'Check login',
                             env: 'Stage'
                         ],
 
-                        // =====================================================
-                        // 02 - Login
-                        // =====================================================
                         [
                             name: 'MD-T38 Login with valid phone and incorrect password',
                             path: 'MD-T38Login with a valid phone number and incorrect password',
@@ -81,13 +74,8 @@ pipeline {
                         ]
                     ]
 
-                    // =========================================================
-                    // Test Execution
-                    // =========================================================
-
                     def failedTests = []
 
-                    echo ""
                     echo "=============================================="
                     echo "TOTAL SCENARIOS: ${scenarios.size()}"
                     echo "=============================================="
@@ -96,8 +84,10 @@ pipeline {
 
                         def targetEnv = scenario.env ?: defaultEnv
 
-                        def safeName = scenario.name
-                            .replaceAll(/[^a-zA-Z0-9_-]/, '_')
+                        def safeName = scenario.name.replaceAll(
+                            /[^a-zA-Z0-9_-]/,
+                            '_'
+                        )
 
                         def junitFile = "temp-reports/${safeName}-junit.xml"
                         def htmlFile = "reports/${safeName}-report.html"
@@ -110,58 +100,63 @@ pipeline {
                         echo "Environment: ${targetEnv}"
                         echo "=============================================="
 
-                        def result = sh(
-                            script: """
-                                #!/bin/bash
+                        withEnv([
+                            "SCENARIO_PATH=${scenario.path}",
+                            "TARGET_ENV=${targetEnv}",
+                            "JUNIT_FILE=${junitFile}",
+                            "HTML_FILE=${htmlFile}",
+                            "LOG_FILE=${logFile}"
+                        ]) {
 
-                                set +e
-                                set -o pipefail
+                            def result = sh(
+                                script: '''
+                                    #!/bin/bash
 
-                                bru run "${scenario.path}" \\
-                                    --env "${targetEnv}" \\
-                                    --reporter junit "${junitFile}" \\
-                                    --reporter html "${htmlFile}" \\
-                                    2>&1 | tee "${logFile}"
+                                    set +e
+                                    set -o pipefail
 
-                                EXIT_CODE=\\$?
+                                    echo "Running Bruno..."
+                                    echo "Scenario: $SCENARIO_PATH"
+                                    echo "Environment: $TARGET_ENV"
+
+                                    bru run "$SCENARIO_PATH" \
+                                        --env "$TARGET_ENV" \
+                                        --reporter junit "$JUNIT_FILE" \
+                                        --reporter html "$HTML_FILE" \
+                                        2>&1 | tee "$LOG_FILE"
+
+                                    EXIT_CODE=$?
+
+                                    echo ""
+                                    echo "======================================"
+                                    echo "Bruno Exit Code: $EXIT_CODE"
+                                    echo "======================================"
+
+                                    exit $EXIT_CODE
+                                ''',
+                                returnStatus: true
+                            )
+
+                            if (result != 0) {
+
+                                failedTests.add(scenario.name)
 
                                 echo ""
-                                echo "Bruno Exit Code: \\$EXIT_CODE"
+                                echo "❌ FAILED: ${scenario.name}"
+                                echo "Exit Code: ${result}"
 
-                                exit \\$EXIT_CODE
-                            """,
-                            returnStatus: true
-                        )
+                            } else {
 
-                        if (result != 0) {
-
-                            failedTests.add(scenario.name)
-
-                            echo ""
-                            echo "❌ FAILED: ${scenario.name}"
-                            echo "Exit Code: ${result}"
-
-                        } else {
-
-                            echo ""
-                            echo "✅ PASSED: ${scenario.name}"
+                                echo ""
+                                echo "✅ PASSED: ${scenario.name}"
+                            }
                         }
-
-                        echo ""
                     }
-
-                    // =========================================================
-                    // Save Failed Tests
-                    // =========================================================
 
                     writeFile(
                         file: 'reports/failed-tests.txt',
                         text: failedTests.join('\n')
                     )
-
-                    // =========================================================
-                    // Test Execution Summary
-                    // =========================================================
 
                     def totalTests = scenarios.size()
                     def failedCount = failedTests.size()
@@ -195,22 +190,15 @@ pipeline {
                         echo ""
                         echo "🎉 ALL SCENARIOS PASSED"
                     }
-
-                    echo "=============================================="
                 }
             }
         }
     }
 
-    // ========================================================================
-    // POST ACTIONS
-    // ========================================================================
-
     post {
 
         always {
 
-            echo ""
             echo "Publishing Jenkins JUnit Test Reports..."
 
             junit(
@@ -228,7 +216,6 @@ pipeline {
 
         unstable {
 
-            echo ""
             echo "=============================================="
             echo "⚠️ TESTS FAILED (BUILD UNSTABLE)"
             echo "=============================================="
@@ -242,9 +229,8 @@ pipeline {
                     ).trim()
 
                     if (failed) {
-
                         echo ""
-                        echo "Failed scenarios detail:"
+                        echo "Failed scenarios:"
                         echo "----------------------------------------------"
                         echo failed
                         echo "----------------------------------------------"
@@ -255,7 +241,6 @@ pipeline {
 
         success {
 
-            echo ""
             echo "=============================================="
             echo "✅ ALL TESTS PASSED"
             echo "=============================================="
@@ -263,7 +248,6 @@ pipeline {
 
         failure {
 
-            echo ""
             echo "=============================================="
             echo "❌ PIPELINE FAILED"
             echo "=============================================="
@@ -271,11 +255,9 @@ pipeline {
 
         cleanup {
 
-            echo ""
             echo "=============================================="
             echo "Jenkins Test Execution Completed"
             echo "=============================================="
         }
     }
 }
-
