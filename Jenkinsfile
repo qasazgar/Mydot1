@@ -11,33 +11,36 @@ pipeline {
 
         stage('Check Environment') {
             steps {
-                sh '''
-                    echo "======================================"
-                    echo "Node version:"
-                    node --version
+                sh ''
+                '
+                echo "======================================"
+                echo "Node version:"
+                node--version
 
-                    echo "NPM version:"
-                    npm --version
+                echo "NPM version:"
+                npm--version
 
-                    echo "Bruno version:"
-                    bru --version
+                echo "Bruno version:"
+                bru--version
 
-                    echo "======================================"
-                '''
+                echo "======================================"
+                ''
+                '
             }
         }
 
         stage('Prepare Reports') {
             steps {
-                sh '''
-                    rm -rf reports
-                    rm -rf temp-reports
-                    rm -rf test-logs
+                sh ''
+                '
+                rm - rf reports
+                rm - rf temp - reports
+                rm - rf test - logs
 
-                    mkdir -p reports
-                    mkdir -p temp-reports
-                    mkdir -p test-logs
-                '''
+                mkdir - p reports
+                mkdir - p temp - reports
+                mkdir - p test - logs ''
+                '
             }
         }
 
@@ -70,12 +73,14 @@ pipeline {
                         [
                             name: 'Login',
                             path: 'MD-T39Login with a valid username and incorrect password'
+                            env: 'Stage'
                         ],
                         [
                             name: 'Login',
                             path: 'MD-T40Login using OTP with a phone number'
+                            env: 'Stage'
                         ]
-                     
+
                     ]
 
                     // =========================================================
@@ -90,7 +95,7 @@ pipeline {
 
                     for (scenario in scenarios) {
 
-                        def targetEnv = scenario.env ?: defaultEnv
+                        def targetEnv = scenario.env ? : defaultEnv
 
                         echo ""
                         echo "=============================================="
@@ -104,24 +109,24 @@ pipeline {
                         def logFile = "test-logs/${scenario.name}.log"
 
                         def result = sh(
-                            script: """#!/bin/bash
-set +e
-set -o pipefail
+                            script: ""
+                            "#!/bin/bash
+                            set + e set - o pipefail
 
-bru run "${scenario.path}" \\
-    --env "${targetEnv}" \\
-    --reporter-junit "${junitFile}" \\
-    --reporter-html "${htmlFile}" \\
-    2>&1 | tee "${logFile}"
+                            bru run "${scenario.path}"\\
+                            --env "${targetEnv}"\\
+                            --reporter - junit "${junitFile}"\\
+                            --reporter - html "${htmlFile}"\\
+                            2 > & 1 | tee "${logFile}"
 
-EXIT_CODE=\$?
+                            EXIT_CODE = \$ ?
 
-echo ""
-echo "Bruno Exit Code: \$EXIT_CODE"
+                            echo ""
+                            echo "Bruno Exit Code: \$EXIT_CODE"
 
-exit \$EXIT_CODE
-""",
-                            returnStatus: true
+                            exit\ $EXIT_CODE ""
+                            ",
+                            returnStatus : true
                         )
 
                         if (result != 0) {
