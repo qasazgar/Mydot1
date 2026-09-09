@@ -1,3 +1,4 @@
+```groovy
 pipeline {
     agent any
 
@@ -75,27 +76,27 @@ pipeline {
                     ]
 
                     def failedTests = []
+                    def scenarioNumber = 0
 
+                    echo ""
                     echo "=============================================="
                     echo "TOTAL SCENARIOS: ${scenarios.size()}"
                     echo "=============================================="
 
                     for (scenario in scenarios) {
 
+                        scenarioNumber = scenarioNumber + 1
+
                         def targetEnv = scenario.env ?: defaultEnv
 
-                        def safeName = scenario.name.replaceAll(
-                            /[^a-zA-Z0-9_-]/,
-                            '_'
-                        )
-
-                        def junitFile = "temp-reports/${safeName}-junit.xml"
-                        def htmlFile = "reports/${safeName}-report.html"
-                        def logFile = "test-logs/${safeName}.log"
+                        def junitFile = "temp-reports/scenario-${scenarioNumber}-junit.xml"
+                        def htmlFile = "reports/scenario-${scenarioNumber}-report.html"
+                        def logFile = "test-logs/scenario-${scenarioNumber}.log"
 
                         echo ""
                         echo "=============================================="
-                        echo "Running Scenario: ${scenario.name}"
+                        echo "Scenario #${scenarioNumber}"
+                        echo "Name: ${scenario.name}"
                         echo "Path: ${scenario.path}"
                         echo "Environment: ${targetEnv}"
                         echo "=============================================="
@@ -115,7 +116,7 @@ pipeline {
                                     set +e
                                     set -o pipefail
 
-                                    echo "Running Bruno..."
+                                    echo "Starting Bruno test..."
                                     echo "Scenario: $SCENARIO_PATH"
                                     echo "Environment: $TARGET_ENV"
 
@@ -128,9 +129,7 @@ pipeline {
                                     EXIT_CODE=$?
 
                                     echo ""
-                                    echo "======================================"
                                     echo "Bruno Exit Code: $EXIT_CODE"
-                                    echo "======================================"
 
                                     exit $EXIT_CODE
                                 ''',
@@ -142,13 +141,13 @@ pipeline {
                                 failedTests.add(scenario.name)
 
                                 echo ""
-                                echo "❌ FAILED: ${scenario.name}"
+                                echo "FAILED: ${scenario.name}"
                                 echo "Exit Code: ${result}"
 
                             } else {
 
                                 echo ""
-                                echo "✅ PASSED: ${scenario.name}"
+                                echo "PASSED: ${scenario.name}"
                             }
                         }
                     }
@@ -178,7 +177,7 @@ pipeline {
                         echo "----------------------------------------------"
 
                         failedTests.each {
-                            echo "❌ ${it}"
+                            echo "FAILED: ${it}"
                         }
 
                         echo "----------------------------------------------"
@@ -188,8 +187,10 @@ pipeline {
                     } else {
 
                         echo ""
-                        echo "🎉 ALL SCENARIOS PASSED"
+                        echo "ALL SCENARIOS PASSED"
                     }
+
+                    echo "=============================================="
                 }
             }
         }
@@ -199,6 +200,7 @@ pipeline {
 
         always {
 
+            echo ""
             echo "Publishing Jenkins JUnit Test Reports..."
 
             junit(
@@ -216,8 +218,9 @@ pipeline {
 
         unstable {
 
+            echo ""
             echo "=============================================="
-            echo "⚠️ TESTS FAILED (BUILD UNSTABLE)"
+            echo "TESTS FAILED - BUILD UNSTABLE"
             echo "=============================================="
 
             script {
@@ -229,6 +232,7 @@ pipeline {
                     ).trim()
 
                     if (failed) {
+
                         echo ""
                         echo "Failed scenarios:"
                         echo "----------------------------------------------"
@@ -241,23 +245,27 @@ pipeline {
 
         success {
 
+            echo ""
             echo "=============================================="
-            echo "✅ ALL TESTS PASSED"
+            echo "ALL TESTS PASSED"
             echo "=============================================="
         }
 
         failure {
 
+            echo ""
             echo "=============================================="
-            echo "❌ PIPELINE FAILED"
+            echo "PIPELINE FAILED"
             echo "=============================================="
         }
 
         cleanup {
 
+            echo ""
             echo "=============================================="
             echo "Jenkins Test Execution Completed"
             echo "=============================================="
         }
     }
 }
+```
