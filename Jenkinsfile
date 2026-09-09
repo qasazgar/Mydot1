@@ -1,3 +1,4 @@
+```groovy
 pipeline {
     agent any
 
@@ -11,36 +12,33 @@ pipeline {
 
         stage('Check Environment') {
             steps {
-                sh ''
-                '
-                echo "======================================"
-                echo "Node version:"
-                node--version
+                sh '''
+                    echo "======================================"
+                    echo "Node version:"
+                    node --version
 
-                echo "NPM version:"
-                npm--version
+                    echo "NPM version:"
+                    npm --version
 
-                echo "Bruno version:"
-                bru--version
+                    echo "Bruno version:"
+                    bru --version
 
-                echo "======================================"
-                ''
-                '
+                    echo "======================================"
+                '''
             }
         }
 
         stage('Prepare Reports') {
             steps {
-                sh ''
-                '
-                rm - rf reports
-                rm - rf temp - reports
-                rm - rf test - logs
+                sh '''
+                    rm -rf reports
+                    rm -rf temp-reports
+                    rm -rf test-logs
 
-                mkdir - p reports
-                mkdir - p temp - reports
-                mkdir - p test - logs ''
-                '
+                    mkdir -p reports
+                    mkdir -p temp-reports
+                    mkdir -p test-logs
+                '''
             }
         }
 
@@ -53,7 +51,7 @@ pipeline {
                     def scenarios = [
 
                         // =====================================================
-                        // 01 - End To End (Run with SuperApp-dev)
+                        // 01 - End To End
                         // =====================================================
                         [
                             name: 'Check login',
@@ -62,30 +60,31 @@ pipeline {
                         ],
 
                         // =====================================================
-                        // 02 - Login (Run with SuperApp-dev-BDD)
+                        // 02 - Login
                         // =====================================================
                         [
-                            name: 'Login',
-                            path: 'MD-T38Login with a valid phone number and incorrect password'
+                            name: 'MD-T38 Login with valid phone and incorrect password',
+                            path: 'MD-T38Login with a valid phone number and incorrect password',
                             env: 'Stage'
+                        ],
 
-                        ],
                         [
-                            name: 'Login',
-                            path: 'MD-T39Login with a valid username and incorrect password'
+                            name: 'MD-T39 Login with valid username and incorrect password',
+                            path: 'MD-T39Login with a valid username and incorrect password',
                             env: 'Stage'
                         ],
+
                         [
-                            name: 'Login',
-                            path: 'MD-T40Login using OTP with a phone number'
+                            name: 'MD-T40 Login using OTP with phone number',
+                            path: 'MD-T40Login using OTP with a phone number',
                             env: 'Stage'
                         ]
-
                     ]
 
                     // =========================================================
                     // Test Execution
                     // =========================================================
+
                     def failedTests = []
 
                     echo ""
@@ -95,7 +94,14 @@ pipeline {
 
                     for (scenario in scenarios) {
 
-                        def targetEnv = scenario.env ? : defaultEnv
+                        def targetEnv = scenario.env ?: defaultEnv
+
+                        def safeName = scenario.name
+                            .replaceAll(/[^a-zA-Z0-9_-]/, '_')
+
+                        def junitFile = "temp-reports/${safeName}-junit.xml"
+                        def htmlFile = "reports/${safeName}-report.html"
+                        def logFile = "test-logs/${safeName}.log"
 
                         echo ""
                         echo "=============================================="
@@ -104,37 +110,39 @@ pipeline {
                         echo "Environment: ${targetEnv}"
                         echo "=============================================="
 
-                        def junitFile = "temp-reports/${scenario.name}-junit.xml"
-                        def htmlFile = "reports/${scenario.name}-report.html"
-                        def logFile = "test-logs/${scenario.name}.log"
-
                         def result = sh(
-                            script: ""
-                            "#!/bin/bash
-                            set + e set - o pipefail
+                            script: """
+                                #!/bin/bash
 
-                            bru run "${scenario.path}"\\
-                            --env "${targetEnv}"\\
-                            --reporter - junit "${junitFile}"\\
-                            --reporter - html "${htmlFile}"\\
-                            2 > & 1 | tee "${logFile}"
+                                set +e
+                                set -o pipefail
 
-                            EXIT_CODE = \$ ?
+                                bru run "${scenario.path}" \\
+                                    --env "${targetEnv}" \\
+                                    --reporter junit "${junitFile}" \\
+                                    --reporter html "${htmlFile}" \\
+                                    2>&1 | tee "${logFile}"
 
-                            echo ""
-                            echo "Bruno Exit Code: \$EXIT_CODE"
+                                EXIT_CODE=\\$?
 
-                            exit\ $EXIT_CODE ""
-                            ",
-                            returnStatus : true
+                                echo ""
+                                echo "Bruno Exit Code: \\$EXIT_CODE"
+
+                                exit \\$EXIT_CODE
+                            """,
+                            returnStatus: true
                         )
 
                         if (result != 0) {
+
                             failedTests.add(scenario.name)
+
                             echo ""
                             echo "❌ FAILED: ${scenario.name}"
                             echo "Exit Code: ${result}"
+
                         } else {
+
                             echo ""
                             echo "✅ PASSED: ${scenario.name}"
                         }
@@ -145,6 +153,7 @@ pipeline {
                     // =========================================================
                     // Save Failed Tests
                     // =========================================================
+
                     writeFile(
                         file: 'reports/failed-tests.txt',
                         text: failedTests.join('\n')
@@ -153,6 +162,7 @@ pipeline {
                     // =========================================================
                     // Test Execution Summary
                     // =========================================================
+
                     def totalTests = scenarios.size()
                     def failedCount = failedTests.size()
                     def passedCount = totalTests - failedCount
@@ -167,15 +177,21 @@ pipeline {
                     echo "=============================================="
 
                     if (failedCount > 0) {
+
                         echo ""
                         echo "Failed Scenarios:"
                         echo "----------------------------------------------"
+
                         failedTests.each {
                             echo "❌ ${it}"
                         }
+
                         echo "----------------------------------------------"
+
                         currentBuild.result = 'UNSTABLE'
+
                     } else {
+
                         echo ""
                         echo "🎉 ALL SCENARIOS PASSED"
                     }
@@ -189,9 +205,11 @@ pipeline {
     // ========================================================================
     // POST ACTIONS
     // ========================================================================
+
     post {
 
         always {
+
             echo ""
             echo "Publishing Jenkins JUnit Test Reports..."
 
@@ -209,15 +227,22 @@ pipeline {
         }
 
         unstable {
+
             echo ""
             echo "=============================================="
             echo "⚠️ TESTS FAILED (BUILD UNSTABLE)"
             echo "=============================================="
 
             script {
+
                 if (fileExists('reports/failed-tests.txt')) {
-                    def failed = readFile('reports/failed-tests.txt').trim()
+
+                    def failed = readFile(
+                        'reports/failed-tests.txt'
+                    ).trim()
+
                     if (failed) {
+
                         echo ""
                         echo "Failed scenarios detail:"
                         echo "----------------------------------------------"
@@ -229,6 +254,7 @@ pipeline {
         }
 
         success {
+
             echo ""
             echo "=============================================="
             echo "✅ ALL TESTS PASSED"
@@ -236,6 +262,7 @@ pipeline {
         }
 
         failure {
+
             echo ""
             echo "=============================================="
             echo "❌ PIPELINE FAILED"
@@ -243,6 +270,7 @@ pipeline {
         }
 
         cleanup {
+
             echo ""
             echo "=============================================="
             echo "Jenkins Test Execution Completed"
@@ -250,3 +278,4 @@ pipeline {
         }
     }
 }
+```
