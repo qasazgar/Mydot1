@@ -25,7 +25,7 @@ http:
     type: json
     data: |-
       {
-        "otp": "{{otp}}",
+        "otp": "{{Otp}}",
         "phone_number": "{{randomMobile}}"
       }
   auth: inherit
@@ -49,3 +49,4 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true

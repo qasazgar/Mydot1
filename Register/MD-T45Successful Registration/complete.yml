@@ -91,10 +91,12 @@ runtime:
       code: |-
         const response = res.getBody();
 
-        bru.setVar("otp", response.otp);
-        console.log("Waiting 2 seconds before request...");
+        bru.setVar("Otp", response.otp);
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        console.log("Waiting 3 seconds before request...");
+
+        await new Promise(resolve => setTimeout(resolve, 3000));
     - type: tests
       code: |-
         tests :{
@@ -112,3 +114,4 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -8,11 +8,11 @@ variables:
     value: ""
   - name: dot_id_Quote
     value: ""
-  - name: otp
+  - name: Otp
     value: ""
   - name: pre_auth_token
     value: ""
   - name: randomMobile
     value: ""
   - name: eligibility_token
-    value: bK0TnMG72wjsqtJpG8UkvXcHlWKZ6kRs-77816a-HgI
+    value: j9iayzwiETfNJXN3_31USJ2p0bRx3r6UeVE2w8wiAkM
