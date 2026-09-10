@@ -1,0 +1,7 @@
+info:
+  name: MD-T45Successful Registration
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit

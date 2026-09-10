@@ -92,6 +92,14 @@ pipeline {
                         [
                             name: 'MD-T40Login using OTP with a phone number',
                             report: 'md-t40'
+                        ],
+                        [
+                            name: 'MD-T34Login with a valid username',
+                            report: 'md-t34'
+                        ],
+                        [
+                            name: 'MD-T36Login with a Invalid username',
+                            report: 'md-t36'
                         ]
                     ]
 

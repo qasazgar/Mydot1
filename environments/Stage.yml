@@ -18,3 +18,6 @@ variables:
   - name: pre_auth_token
     value: ""
     description: ""
+  - name: eligibility_token
+    value: ""
+    description: ""

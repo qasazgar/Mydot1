@@ -1,0 +1,7 @@
+info:
+  name: MD-T34Login with a valid username
+  type: folder
+  seq: 4
+
+request:
+  auth: inherit
