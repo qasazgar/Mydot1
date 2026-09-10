@@ -43,7 +43,7 @@ http:
     type: json
     data: |-
       {
-        "phone_number": "+989127988499"
+        "phone_number": "{{randomMobile}}"
       }
   auth: inherit
 
