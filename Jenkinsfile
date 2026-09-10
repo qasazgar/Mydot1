@@ -153,7 +153,6 @@ pipeline {
 
             echo "======================================"
             echo " ALL LOGIN TESTS PASSED"
-            echo " No SMS will be sent."
             echo "======================================"
         }
 
@@ -161,16 +160,8 @@ pipeline {
 
             echo "======================================"
             echo " LOGIN TESTS FAILED"
-            echo " Running SMS Notification..."
             echo "======================================"
 
-            sh '''
-                bru run "sms" || true
-            '''
-
-            echo "======================================"
-            echo " SMS Notification Completed"
-            echo "======================================"
         }
     }
 }

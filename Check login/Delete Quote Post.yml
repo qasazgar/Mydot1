@@ -1,7 +1,7 @@
 info:
   name: Delete Quote Post
   type: http
-  seq: 10
+  seq: 8
 
 http:
   method: delete
@@ -63,4 +63,3 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
-  forwardAuthorizationHeader: false

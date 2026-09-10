@@ -1,7 +1,7 @@
 info:
   name: Delete repost
   type: http
-  seq: 8
+  seq: 10
 
 http:
   method: delete
@@ -63,4 +63,3 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
-  forwardAuthorizationHeader: false
