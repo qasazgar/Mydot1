@@ -14,3 +14,5 @@ variables:
     value: ""
   - name: randomMobile
     value: ""
+  - name: eligibility_token
+    value: VM7XVMI7ekYBB68lNLt0bH9bjw_ZIhbuRz2SQUIX3v4

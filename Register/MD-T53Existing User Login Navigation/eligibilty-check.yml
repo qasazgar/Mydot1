@@ -51,34 +51,9 @@ runtime:
   scripts:
     - type: before-request
       code: |-
-        function generateIranianMobile() {
-            const prefixes = [
-                "910", "911", "912", "913", "914", "915",
-                "916", "917", "918", "919",
-                "990", "991", "992", "993", "994",
-                "995", "996", "997", "998", "999"
-            ];
+        console.log("Waiting 2 seconds before request...");
 
-            const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-            let number = "";
-
-            for (let i = 0; i < 7; i++) {
-                number += Math.floor(Math.random() * 10);
-            }
-
-            return `+98${prefix}${number}`;
-        }
-
-        const randomMobile = generateIranianMobile();
-
-        bru.setVar("randomMobile", randomMobile);
-
-        console.log("Random Mobile:", randomMobile);
-    - type: after-response
-      code: |-
-        const body = res.getBody();
-
-        bru.setEnvVar("eligibility_token", body.eligibility_token);
+        await new Promise(resolve => setTimeout(resolve, 2000));
     - type: tests
       code: |-
         tests :{
