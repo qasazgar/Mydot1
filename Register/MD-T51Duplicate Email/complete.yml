@@ -1,0 +1,117 @@
+info:
+  name: complete
+  type: http
+  seq: 2
+
+http:
+  method: post
+  url: "{{Url}}/auth/register/complete/"
+  headers:
+    - name: sec-ch-ua-platform
+      value: '"Windows"'
+    - name: Referer
+      value: https://stage.dpsb.ir/
+    - name: User-Agent
+      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+    - name: Accept
+      value: application/json, text/plain, */*
+    - name: sec-ch-ua
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
+    - name: Content-Type
+      value: application/json
+    - name: sec-ch-ua-mobile
+      value: ?0
+  body:
+    type: json
+    data: |-
+      {
+        "display_name": "{{randomUsername}}",
+        "email": "sazgar11@gmial.com",
+        "password": "Ahmad@123",
+        "username": "{{randomUsername}}",
+        "confirm_password": "Ahmad@123",
+        "phone_number": "{{randomMobile}}",
+        "eligibility_token": "{{eligibility_token}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const firstNames = [
+            "ahmad", "ali", "reza", "mohammad", "hossein",
+            "hassan", "amir", "mehdi", "sina", "arash",
+            "pooya", "milad", "hamid", "saeed", "farhad",
+            "shahin", "navid", "omid", "masoud", "behzad",
+            "parsa", "iman", "kasra", "shayan", "sam",
+            "babak", "kian", "arman", "danial", "matin",
+            "morteza", "mostafa", "majid", "vahid", "yasin",
+            "alireza", "mohsen", "hosseinreza", "amirhossein",
+            "amirali", "amirreza", "sajjad", "ashkan", "behnam",
+            "mehran", "pedram", "shervin", "korosh", "farshad",
+            "kamran", "shahram", "nima", "shayan", "roham",
+            "soroush", "payam", "hamidreza", "milad", "aliakbar"
+        ];
+
+        const lastNames = [
+            "sazgar", "ahmadi", "mohammadi", "rezaei", "hosseini",
+            "hashemi", "karimi", "moradi", "rahimi", "jafari",
+            "kazemi", "alizadeh", "akbari", "soleimani", "ghasemi",
+            "mousavi", "sharifi", "amini", "nejati", "heidari",
+            "sadeghi", "taheri", "amini", "farhadi", "esmaili",
+            "abbasi", "yousefi", "nouri", "maleki", "rostami",
+            "najafi", "shahbazi", "rahmani", "ansari", "mirzaei",
+            "zarei", "karamati", "hasanzadeh", "niknam", "fathi",
+            "davoodi", "ghorbani", "pourmohammadi", "afshari",
+            "khani", "shahidi", "jamali", "mehrabi", "vakili",
+            "ebrahimi", "habibi", "salimi", "lotfi", "azizi",
+            "mohammadzadeh", "akhlaghi", "panahi", "rasouli"
+        ];
+        function randomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function generateIranianUsername() {
+            const firstName = randomItem(firstNames);
+            const lastName = randomItem(lastNames);
+            const number = Math.floor(100 + Math.random() * 900);
+
+            const username = `${firstName}_${lastName}${number}`;
+
+            return username.substring(0, 25);
+        }
+
+        const randomUsername = generateIranianUsername();
+
+        bru.setVar("randomUsername", randomUsername);
+
+        console.log("Random Username:", randomUsername);
+    - type: after-response
+      code: |-
+        const response = res.getBody();
+
+        bru.setVar("Otp", response.otp);
+
+
+        console.log("Waiting 3 seconds before request...");
+
+        await new Promise(resolve => setTimeout(resolve, 3000));
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 409", function() {
+            expect(res.status).to.equal(409);
+          });
+
+          test("Response time should be less than 500 ms", function() {
+            expect(res.responseTime).to.be.lessThan(500);
+          });
+        }
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

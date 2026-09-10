@@ -1,0 +1,7 @@
+info:
+  name: MD-T51Duplicate Username
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit

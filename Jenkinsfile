@@ -145,6 +145,14 @@ pipeline {
                         [
                             name: 'MD-T53Existing User Login Navigation',
                             report: 'md-t53'
+                        ],
+                        [
+                            name: 'MD-T51Duplicate Email',
+                            report: 'md-t51'
+                        ],
+                        [
+                            name: 'MD-T51Duplicate Username',
+                            report: 'md-t511'
                         ]
                     ]
 
