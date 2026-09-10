@@ -63,7 +63,7 @@ pipeline {
                             echo "======================================"
 
                             bru run "Check login" \
-                                --env Dev \
+                                --env Stage \
                                 --reporter-junit reports/check-login-junit.xml \
                                 --reporter-html reports/check-login-report.html
 
@@ -118,7 +118,7 @@ pipeline {
                                     echo "======================================"
 
                                     bru run "Login/${scenario.name}" \
-                                        --env Dev \
+                                        --env Stage \
                                         --reporter-junit reports/${scenario.report}-junit.xml \
                                         --reporter-html reports/${scenario.report}-report.html
 
@@ -163,7 +163,7 @@ pipeline {
                                     echo "======================================"
 
                                     bru run "Register/${scenario.name}" \
-                                        --env Dev \
+                                        --env Stage \
                                         --reporter-junit reports/${scenario.report}-junit.xml \
                                         --reporter-html reports/${scenario.report}-report.html
 
