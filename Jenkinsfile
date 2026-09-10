@@ -1,6 +1,16 @@
-
 pipeline {
     agent any
+
+    options {
+        disableConcurrentBuilds()
+
+        buildDiscarder(
+            logRotator(
+                numToKeepStr: '20',
+                artifactNumToKeepStr: '10'
+            )
+        )
+    }
 
     stages {
 
@@ -14,6 +24,9 @@ pipeline {
             steps {
                 sh '''
                     echo "======================================"
+                    echo " Environment Check"
+                    echo "======================================"
+
                     echo "Node version:"
                     node --version
 
@@ -32,165 +45,59 @@ pipeline {
             steps {
                 sh '''
                     rm -rf reports
-                    rm -rf temp-reports
-                    rm -rf test-logs
-
                     mkdir -p reports
-                    mkdir -p temp-reports
-                    mkdir -p test-logs
                 '''
             }
         }
 
-        stage('Run All Scenarios') {
+        stage('Run Check Login Tests') {
             steps {
                 script {
+                    catchError(
+                        buildResult: 'FAILURE',
+                        stageResult: 'FAILURE'
+                    ) {
+                        sh '''
+                            echo "======================================"
+                            echo " Running Check Login Tests"
+                            echo "======================================"
 
-                    def defaultEnv = 'SuperApp-dev-BDD'
+                            bru run "Check login" \
+                                --env Dev \
+                                --reporter-junit reports/check-login-junit.xml \
+                                --reporter-html reports/check-login-report.html
 
-                    def scenarios = [
-
-                        [
-                            name: 'Check login',
-                            path: 'Check login',
-                            env: 'Stage'
-                        ],
-
-                        [
-                            name: 'MD-T38 Login with valid phone and incorrect password',
-                            path: 'MD-T38Login with a valid phone number and incorrect password',
-                            env: 'Stage'
-                        ],
-
-                        [
-                            name: 'MD-T39 Login with valid username and incorrect password',
-                            path: 'MD-T39Login with a valid username and incorrect password',
-                            env: 'Stage'
-                        ],
-
-                        [
-                            name: 'MD-T40 Login using OTP with phone number',
-                            path: 'MD-T40Login using OTP with a phone number',
-                            env: 'Stage'
-                        ]
-                    ]
-
-                    def failedTests = []
-                    def scenarioNumber = 0
-
-                    echo ""
-                    echo "=============================================="
-                    echo "TOTAL SCENARIOS: ${scenarios.size()}"
-                    echo "=============================================="
-
-                    for (scenario in scenarios) {
-
-                        scenarioNumber = scenarioNumber + 1
-
-                        def targetEnv = scenario.env ?: defaultEnv
-
-                        def junitFile = "temp-reports/scenario-${scenarioNumber}-junit.xml"
-                        def htmlFile = "reports/scenario-${scenarioNumber}-report.html"
-                        def logFile = "test-logs/scenario-${scenarioNumber}.log"
-
-                        echo ""
-                        echo "=============================================="
-                        echo "Scenario #${scenarioNumber}"
-                        echo "Name: ${scenario.name}"
-                        echo "Path: ${scenario.path}"
-                        echo "Environment: ${targetEnv}"
-                        echo "=============================================="
-
-                        withEnv([
-                            "SCENARIO_PATH=${scenario.path}",
-                            "TARGET_ENV=${targetEnv}",
-                            "JUNIT_FILE=${junitFile}",
-                            "HTML_FILE=${htmlFile}",
-                            "LOG_FILE=${logFile}"
-                        ]) {
-
-                            def result = sh(
-                                script: '''
-                                    #!/bin/bash
-
-                                    set +e
-                                    set -o pipefail
-
-                                    echo "Starting Bruno test..."
-                                    echo "Scenario: $SCENARIO_PATH"
-                                    echo "Environment: $TARGET_ENV"
-
-                                    bru run "$SCENARIO_PATH" \
-                                        --env "$TARGET_ENV" \
-                                        --reporter junit "$JUNIT_FILE" \
-                                        --reporter html "$HTML_FILE" \
-                                        2>&1 | tee "$LOG_FILE"
-
-                                    EXIT_CODE=$?
-
-                                    echo ""
-                                    echo "Bruno Exit Code: $EXIT_CODE"
-
-                                    exit $EXIT_CODE
-                                ''',
-                                returnStatus: true
-                            )
-
-                            if (result != 0) {
-
-                                failedTests.add(scenario.name)
-
-                                echo ""
-                                echo "FAILED: ${scenario.name}"
-                                echo "Exit Code: ${result}"
-
-                            } else {
-
-                                echo ""
-                                echo "PASSED: ${scenario.name}"
-                            }
-                        }
+                            echo "======================================"
+                            echo " Check Login Tests Completed"
+                            echo "======================================"
+                        '''
                     }
+                }
+            }
+        }
 
-                    writeFile(
-                        file: 'reports/failed-tests.txt',
-                        text: failedTests.join('\n')
-                    )
+        stage('Run Login Tests') {
+            steps {
+                script {
+                    catchError(
+                        buildResult: 'FAILURE',
+                        stageResult: 'FAILURE'
+                    ) {
+                        sh '''
+                            echo "======================================"
+                            echo " Running Login Scenario Tests"
+                            echo "======================================"
 
-                    def totalTests = scenarios.size()
-                    def failedCount = failedTests.size()
-                    def passedCount = totalTests - failedCount
+                            bru run "Login" \
+                                --env Dev \
+                                --reporter-junit reports/login-junit.xml \
+                                --reporter-html reports/login-report.html
 
-                    echo ""
-                    echo "=============================================="
-                    echo "TEST EXECUTION SUMMARY"
-                    echo "=============================================="
-                    echo "Total Scenarios : ${totalTests}"
-                    echo "Passed          : ${passedCount}"
-                    echo "Failed          : ${failedCount}"
-                    echo "=============================================="
-
-                    if (failedCount > 0) {
-
-                        echo ""
-                        echo "Failed Scenarios:"
-                        echo "----------------------------------------------"
-
-                        failedTests.each {
-                            echo "FAILED: ${it}"
-                        }
-
-                        echo "----------------------------------------------"
-
-                        currentBuild.result = 'UNSTABLE'
-
-                    } else {
-
-                        echo ""
-                        echo "ALL SCENARIOS PASSED"
+                            echo "======================================"
+                            echo " Login Scenario Tests Completed"
+                            echo "======================================"
+                        '''
                     }
-
-                    echo "=============================================="
                 }
             }
         }
@@ -199,73 +106,37 @@ pipeline {
     post {
 
         always {
-
-            echo ""
-            echo "Publishing Jenkins JUnit Test Reports..."
+            echo "======================================"
+            echo " Publishing Test Results"
+            echo "======================================"
 
             junit(
-                testResults: 'temp-reports/*-junit.xml',
                 allowEmptyResults: true,
-                skipPublishingChecks: false
+                testResults: 'reports/*-junit.xml'
             )
 
             archiveArtifacts(
-                artifacts: 'reports/**/*.html, reports/failed-tests.txt, test-logs/**/*.log',
-                allowEmptyArchive: true,
-                fingerprint: true
+                artifacts: 'reports/*.html',
+                allowEmptyArchive: true
             )
-        }
 
-        unstable {
-
-            echo ""
-            echo "=============================================="
-            echo "TESTS FAILED - BUILD UNSTABLE"
-            echo "=============================================="
-
-            script {
-
-                if (fileExists('reports/failed-tests.txt')) {
-
-                    def failed = readFile(
-                        'reports/failed-tests.txt'
-                    ).trim()
-
-                    if (failed) {
-
-                        echo ""
-                        echo "Failed scenarios:"
-                        echo "----------------------------------------------"
-                        echo failed
-                        echo "----------------------------------------------"
-                    }
-                }
-            }
+            echo "======================================"
+            echo " Test Reports Published"
+            echo "======================================"
         }
 
         success {
-
-            echo ""
-            echo "=============================================="
-            echo "ALL TESTS PASSED"
-            echo "=============================================="
+            echo "======================================"
+            echo " ALL LOGIN TESTS PASSED"
+            echo "======================================"
         }
 
         failure {
+            echo "======================================"
+            echo " LOGIN TESTS FAILED"
+            echo "======================================"
 
-            echo ""
-            echo "=============================================="
-            echo "PIPELINE FAILED"
-            echo "=============================================="
-        }
-
-        cleanup {
-
-            echo ""
-            echo "=============================================="
-            echo "Jenkins Test Execution Completed"
-            echo "=============================================="
+          
         }
     }
 }
-
