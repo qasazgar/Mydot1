@@ -1,0 +1,60 @@
+info:
+  name: Repost2
+  type: http
+  seq: 9
+
+http:
+  method: post
+  url: "{{Url}}/dots/"
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: Cookie
+      value: csrftoken=OX2M2svI670BIZThW9CtjytKGVJXsXBt; sessionid=umfkub9jyhucp0dfl95w2n946xjzsevm; access_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg5MDI0MTU4LCJpYXQiOjE3ODkwMjIzNTgsImp0aSI6ImI3NDZiY2RmMjUwODRmMjc4NGJmZTcwOTI2NGM0YTRhIiwidXNlcl9pZCI6ImFmMDRiZDc1LWIyYzgtNDJiOS1iODhmLTQ2YWY3ZjBlOGI3NiJ9.Op5x5x52NuY0MXltWnI_00wEsjYvVyBiw5BjPenVyOZkRXkodya3mB1qCTOGSfJ7D5jNreNTD8xANkOhPBZvaw; is_logged_in=true
+    - name: origin
+      value: https://stage.dpsb.ir
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://stage.dpsb.ir/
+    - name: sec-ch-ua
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
+    - name: sec-ch-ua-mobile
+      value: ?0
+    - name: sec-ch-ua-platform
+      value: '"Windows"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+  body:
+    type: json
+    data: |-
+      {
+        "dot_type": "repost",
+        "reply_to": null,
+        "repost_of": "{{dot_id}}",
+        "quote_of": null,
+        "media_ids": [],
+        "reply_permission": "everyone",
+        "publication_status": "published"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
