@@ -153,6 +153,10 @@ pipeline {
                         [
                             name: 'MD-T51Duplicate Username',
                             report: 'md-t511'
+                        ],
+                        [
+                            name:'MD-T46Incorrect OTPUnsuccessful Registration',
+                            report:'md-t46'
                         ]
                     ]
 
