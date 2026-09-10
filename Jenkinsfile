@@ -50,7 +50,7 @@ pipeline {
             }
         }
 
-        stage('Run Check Login Tests') {
+        stage('Run Check Login') {
             steps {
                 script {
                     catchError(
@@ -59,16 +59,16 @@ pipeline {
                     ) {
                         sh '''
                             echo "======================================"
-                            echo " Running Check Login Tests"
+                            echo " Running Check Login"
                             echo "======================================"
 
                             bru run "Check login" \
-                                --env Stage \
+                                --env Dev \
                                 --reporter-junit reports/check-login-junit.xml \
                                 --reporter-html reports/check-login-report.html
 
                             echo "======================================"
-                            echo " Check Login Tests Completed"
+                            echo " Check Login Completed"
                             echo "======================================"
                         '''
                     }
@@ -76,27 +76,50 @@ pipeline {
             }
         }
 
-        stage('Run Login Tests') {
+        stage('Run Login Scenarios') {
             steps {
                 script {
-                    catchError(
-                        buildResult: 'FAILURE',
-                        stageResult: 'FAILURE'
-                    ) {
-                        sh '''
-                            echo "======================================"
-                            echo " Running Login Scenario Tests"
-                            echo "======================================"
 
-                            bru run "Login" \
-                                --env Stage \
-                                --reporter-junit reports/login-junit.xml \
-                                --reporter-html reports/login-report.html
+                    def scenarios = [
+                        [
+                            name: 'MD-T38Login with a valid phone number and incorrect password',
+                            report: 'md-t38'
+                        ],
+                        [
+                            name: 'MD-T39Login with a valid username and incorrect password',
+                            report: 'md-t39'
+                        ],
+                        [
+                            name: 'MD-T40Login using OTP with a phone number',
+                            report: 'md-t40'
+                        ]
+                    ]
 
-                            echo "======================================"
-                            echo " Login Scenario Tests Completed"
-                            echo "======================================"
-                        '''
+                    for (scenario in scenarios) {
+
+                        stage("Run ${scenario.report.toUpperCase()}") {
+
+                            catchError(
+                                buildResult: 'FAILURE',
+                                stageResult: 'FAILURE'
+                            ) {
+
+                                sh """
+                                    echo "======================================"
+                                    echo " Running: ${scenario.name}"
+                                    echo "======================================"
+
+                                    bru run "Login/${scenario.name}" \\
+                                        --env Dev \\
+                                        --reporter-junit reports/${scenario.report}-junit.xml \\
+                                        --reporter-html reports/${scenario.report}-report.html
+
+                                    echo "======================================"
+                                    echo " Completed: ${scenario.name}"
+                                    echo "======================================"
+                                """
+                            }
+                        }
                     }
                 }
             }
@@ -106,6 +129,7 @@ pipeline {
     post {
 
         always {
+
             echo "======================================"
             echo " Publishing Test Results"
             echo "======================================"
@@ -121,22 +145,32 @@ pipeline {
             )
 
             echo "======================================"
-            echo " Test Reports Published"
+            echo " All Reports Published"
             echo "======================================"
         }
 
         success {
+
             echo "======================================"
             echo " ALL LOGIN TESTS PASSED"
+            echo " No SMS will be sent."
             echo "======================================"
         }
 
         failure {
+
             echo "======================================"
             echo " LOGIN TESTS FAILED"
+            echo " Running SMS Notification..."
             echo "======================================"
 
-          
+            sh '''
+                bru run "sms" || true
+            '''
+
+            echo "======================================"
+            echo " SMS Notification Completed"
+            echo "======================================"
         }
     }
 }
