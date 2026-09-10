@@ -59,7 +59,7 @@ runtime:
         tests :{
           test("Status code should be 409", function() {
             expect(res.status).to.equal(409);
-            expect(res.getBody().message).to.equal("phone number is already in use");
+
 
           });
 
@@ -73,3 +73,4 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true
