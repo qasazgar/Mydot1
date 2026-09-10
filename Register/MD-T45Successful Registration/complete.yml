@@ -92,6 +92,9 @@ runtime:
         const response = res.getBody();
 
         bru.setVar("otp", response.otp);
+        console.log("Waiting 2 seconds before request...");
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
     - type: tests
       code: |-
         tests :{
