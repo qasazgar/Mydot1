@@ -102,7 +102,21 @@ pipeline {
                             report: 'md-t36'
                         ]
                     ]
+        stage('Run Register Scenarios') {
+            steps {
+                script {
 
+                    def scenarios = [
+                        [
+                            name: 'MD-T45Successful Registration',
+                            report: 'md-t45'
+                        ],
+                        [
+                            name: 'MD-T53Existing User Login Navigation',
+                            report: 'md-t53'
+                        ]
+
+                    ]
                     for (scenario in scenarios) {
 
                         stage("Run ${scenario.report.toUpperCase()}") {

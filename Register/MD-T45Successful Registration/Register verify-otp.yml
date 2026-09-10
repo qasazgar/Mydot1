@@ -1,0 +1,51 @@
+info:
+  name: Register verify-otp
+  type: http
+  seq: 3
+
+http:
+  method: post
+  url: "{{Url}}/auth/register/verify-otp/"
+  headers:
+    - name: sec-ch-ua-platform
+      value: '"Windows"'
+    - name: Referer
+      value: https://stage.dpsb.ir/
+    - name: User-Agent
+      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+    - name: Accept
+      value: application/json, text/plain, */*
+    - name: sec-ch-ua
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
+    - name: Content-Type
+      value: application/json
+    - name: sec-ch-ua-mobile
+      value: ?0
+  body:
+    type: json
+    data: |-
+      {
+        "otp": "{{otp}}",
+        "phone_number": "{{randomMobile}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 201", function() {
+            expect(res.status).to.equal(201);
+          });
+
+          test("Response time should be less than 500 ms", function() {
+            expect(res.responseTime).to.be.lessThan(500);
+          });
+        }
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -43,7 +43,7 @@ http:
     type: json
     data: |-
       {
-        "phone_number": "+989127988499"
+        "phone_number": "+989127988406"
       }
   auth: inherit
 
@@ -82,9 +82,9 @@ runtime:
     - type: tests
       code: |-
         tests :{
-          test("Status code should be 200", function() {
-            expect(res.status).to.equal(200);
-
+          test("Status code should be 409", function() {
+            expect(res.status).to.equal(409);
+            expect(res.getBody().message).to.equal("phone number is already in use");
 
           });
 

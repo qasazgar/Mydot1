@@ -2,22 +2,15 @@ name: Stage
 variables:
   - name: Url
     value: https://api-stage.dpsb.ir/mydot/api/v1
-    description: ""
   - name: access_token
     value: ""
-    description: ""
   - name: dot_id
     value: ""
-    description: ""
   - name: dot_id_Quote
     value: ""
-    description: ""
   - name: otp
     value: ""
-    description: ""
   - name: pre_auth_token
     value: ""
-    description: ""
-  - name: eligibility_token
+  - name: randomMobile
     value: ""
-    description: ""
