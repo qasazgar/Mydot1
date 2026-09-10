@@ -102,21 +102,7 @@ pipeline {
                             report: 'md-t36'
                         ]
                     ]
-        stage('Run Register Scenarios') {
-            steps {
-                script {
 
-                    def scenarios = [
-                        [
-                            name: 'MD-T45Successful Registration',
-                            report: 'md-t45'
-                        ],
-                        [
-                            name: 'MD-T53Existing User Login Navigation',
-                            report: 'md-t53'
-                        ]
-
-                    ]
                     for (scenario in scenarios) {
 
                         stage("Run ${scenario.report.toUpperCase()}") {
@@ -131,9 +117,54 @@ pipeline {
                                     echo " Running: ${scenario.name}"
                                     echo "======================================"
 
-                                    bru run "Login/${scenario.name}" \\
-                                        --env Dev \\
-                                        --reporter-junit reports/${scenario.report}-junit.xml \\
+                                    bru run "Login/${scenario.name}" \
+                                        --env Dev \
+                                        --reporter-junit reports/${scenario.report}-junit.xml \
+                                        --reporter-html reports/${scenario.report}-report.html
+
+                                    echo "======================================"
+                                    echo " Completed: ${scenario.name}"
+                                    echo "======================================"
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Run Register Scenarios') {
+            steps {
+                script {
+
+                    def scenarios = [
+                        [
+                            name: 'MD-T45Successful Registration',
+                            report: 'md-t45'
+                        ],
+                        [
+                            name: 'MD-T53Existing User Login Navigation',
+                            report: 'md-t53'
+                        ]
+                    ]
+
+                    for (scenario in scenarios) {
+
+                        stage("Run ${scenario.report.toUpperCase()}") {
+
+                            catchError(
+                                buildResult: 'FAILURE',
+                                stageResult: 'FAILURE'
+                            ) {
+
+                                sh """
+                                    echo "======================================"
+                                    echo " Running: ${scenario.name}"
+                                    echo "======================================"
+
+                                    bru run "Register/${scenario.name}" \
+                                        --env Dev \
+                                        --reporter-junit reports/${scenario.report}-junit.xml \
                                         --reporter-html reports/${scenario.report}-report.html
 
                                     echo "======================================"
@@ -174,16 +205,15 @@ pipeline {
         success {
 
             echo "======================================"
-            echo " ALL LOGIN TESTS PASSED"
+            echo " ALL TESTS PASSED"
             echo "======================================"
         }
 
         failure {
 
             echo "======================================"
-            echo " LOGIN TESTS FAILED"
+            echo " SOME TESTS FAILED"
             echo "======================================"
-
         }
     }
 }
