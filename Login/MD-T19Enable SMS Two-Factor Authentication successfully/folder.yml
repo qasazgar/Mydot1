@@ -1,0 +1,7 @@
+info:
+  name: MD-T19Enable SMS Two-Factor Authentication successfully
+  type: folder
+  seq: 6
+
+request:
+  auth: inherit

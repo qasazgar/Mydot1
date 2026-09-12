@@ -15,4 +15,8 @@ variables:
   - name: randomMobile
     value: ""
   - name: eligibility_token
-    value: 4QkiYhk0694-5ZdqNrdZk1Cpht2P592NLx91hpr_r7w
+    value: _9ywVGrTlG3b2o9NO5rOvQgZa5y2EYq5_0tMdnEZGe4
+  - name: User1
+    value: sazgar7
+  - name: Password
+    value: Ahmad@123

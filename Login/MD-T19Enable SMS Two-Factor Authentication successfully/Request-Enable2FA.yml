@@ -1,0 +1,81 @@
+info:
+  name: Request-Enable2FA
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: https://api-stage.dpsb.ir/mydot/api/v1/auth/2fa/enable/request/
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: Cookie
+      value: csrftoken=hClQySoT20uEeTTdVs97gtqtE3inNSLf; access_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg5MjEyNTA1LCJpYXQiOjE3ODkyMTA3MDUsImp0aSI6ImRlMmI3ZWE3OTQ2NDQ5OGI5NTJjZTQ1MGYwMjhkZDQ4IiwidXNlcl9pZCI6IjQ0MThlN2UwLTc3NTQtNDY0My1iZjM3LTVhZTcyZWEzMmZkYSJ9.1fYYJAciSE0EFYce2YxD0s7JdYdpqhOFWSDLSOmnogSr8WGuQKgwfTozukkyR3n-EzpmjtfNxBc4SnJgAoKPrw; is_logged_in=true
+    - name: origin
+      value: https://stage.dpsb.ir
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://stage.dpsb.ir/
+    - name: sec-ch-ua
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
+    - name: sec-ch-ua-mobile
+      value: ?0
+    - name: sec-ch-ua-platform
+      value: '"Windows"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36
+  body:
+    type: json
+    data: |-
+      {
+        "password": "{{Password}}",
+        "mfa_method": "sms"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        console.log("Waiting 3 seconds before request...");
+
+        await new Promise(resolve => setTimeout(resolve, 3000));
+    - type: after-response
+      code: |-
+        const response = res.getBody();
+
+        bru.setVar("Otp", response.otp);
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 200", function() {
+            expect(res.status).to.equal(200);
+
+          });
+
+          test("Response time should be less than 500 ms", function() {
+            expect(res.responseTime).to.be.lessThan(500);
+          });
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

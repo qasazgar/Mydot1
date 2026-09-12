@@ -100,6 +100,10 @@ pipeline {
                         [
                             name: 'MD-T36Login with a Invalid username',
                             report: 'md-t36'
+                        ],
+                        [
+                            name:'MD-T19Enable SMS Two-Factor Authentication successfully',
+                            report: 'md-t19'
                         ]
                     ]
 
