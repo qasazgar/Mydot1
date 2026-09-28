@@ -193,7 +193,102 @@ pipeline {
                 }
             }
         }
-    }
+        stage('Run Forgot Password Scenarios') {
+            steps {
+                script {
+
+                    def scenarios = [
+                        [
+                            name: 'MD-T58Successful password reset with valid inputs',
+                            report: 'md-t58'
+                        ],
+                        [
+                            name: 'MD-T59Invalid or unregistered mobile number',
+                            report: 'md-t59'
+                        ],
+                        [
+                            name: 'MD-T60Incorrect OTP code',
+                            report: 'md-t60'
+                        ]
+                    ]
+
+                    for (scenario in scenarios) {
+
+                        stage("Run ${scenario.report.toUpperCase()}") {
+
+                            catchError(
+                                buildResult: 'FAILURE',
+                                stageResult: 'FAILURE'
+                            ) {
+
+                                sh """
+                                    echo "======================================"
+                                    echo " Running: ${scenario.name}"
+                                    echo "======================================"
+
+                                    bru run "Forgot Password/${scenario.name}" \
+                                        --env Stage \
+                                        --reporter-junit reports/${scenario.report}-junit.xml \
+                                        --reporter-html reports/${scenario.report}-report.html
+
+                                    echo "======================================"
+                                    echo " Completed: ${scenario.name}"
+                                    echo "======================================"
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+         stage('Run Invites Scenarios') {
+            steps {
+                script {
+
+                    def scenarios = [
+                        [
+                            name: 'MD-T100Successfully invite a friend using a valid phone number',
+                            report: 'md-t100'
+                        ],
+                        [
+                            name: 'MD-T102Successfully cancel a sent invitation',
+                            report: 'md-t102'
+                        ],
+                        [
+                            name: 'MD-T103Re-invite a phone number that has already been invited',
+                            report: 'md-t103'
+                        ]
+                    ]
+
+                    for (scenario in scenarios) {
+
+                        stage("Run ${scenario.report.toUpperCase()}") {
+
+                            catchError(
+                                buildResult: 'FAILURE',
+                                stageResult: 'FAILURE'
+                            ) {
+
+                                sh """
+                                    echo "======================================"
+                                    echo " Running: ${scenario.name}"
+                                    echo "======================================"
+
+                                    bru run "Invites/${scenario.name}" \
+                                        --env Stage \
+                                        --reporter-junit reports/${scenario.report}-junit.xml \
+                                        --reporter-html reports/${scenario.report}-report.html
+
+                                    echo "======================================"
+                                    echo " Completed: ${scenario.name}"
+                                    echo "======================================"
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
     post {
 
