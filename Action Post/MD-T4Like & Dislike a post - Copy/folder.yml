@@ -1,7 +1,7 @@
 info:
-  name: "Login "
+  name: MD-T4Like & Dislike a post
   type: folder
-  seq: 2
+  seq: 1
 
 request:
   auth: inherit

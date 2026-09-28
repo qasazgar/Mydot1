@@ -2,21 +2,34 @@ name: Stage
 variables:
   - name: Url
     value: https://api-stage.dpsb.ir/mydot/api/v1
+    description: ""
   - name: access_token
     value: ""
+    description: ""
   - name: dot_id
     value: ""
+    description: ""
   - name: dot_id_Quote
     value: ""
+    description: ""
   - name: Otp
     value: ""
+    description: ""
   - name: pre_auth_token
     value: ""
+    description: ""
   - name: randomMobile
     value: ""
+    description: ""
   - name: eligibility_token
     value: JLlC4wRGHaOwSYC5tJtl-CVkMqp40jq5TeTo5rQvfKo
+    description: ""
   - name: User1
     value: sazgar7
+    description: ""
   - name: Password
     value: Ahmad@123
+    description: ""
+  - name: thread_root_id
+    value: ""
+    description: ""

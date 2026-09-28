@@ -1,0 +1,15 @@
+info:
+  name: MD-T5 Add a text comment on a post & Delete
+  type: folder
+  seq: 5
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    Given the user is viewing a post \
+    When the user writes a comment \
+    And submits it \
+    Then the comment should be visible under the post
+  type: text/markdown
