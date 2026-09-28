@@ -254,8 +254,98 @@ pipeline {
                 }
             }
         }
-    }
 
+        stage('Run Action Post Scenarios') {
+            steps {
+                script {
+
+                    def scenarios = [
+                        [
+                            name: 'MD-T4Like & Dislike a post',
+                            report: 'md-t4'
+                        ],
+                        [
+                            name: 'MD-T5 Add a text comment on a post & Delete',
+                            report: 'md-t5'
+                        ],
+                        [
+                            name: 'MD-T10Repost a post',
+                            report: 'md-t10'
+                        ],
+                        [
+                            name: 'MD-T11Repost -Quote a post',
+                            report: 'md-t11'
+                        ],
+                        [
+                            name: 'MD-T185Successfully bookmark a post',
+                            report: 'md-t18'
+                        ]
+                    ]
+
+                    for (scenario in scenarios) {
+
+                        stage("Run ${scenario.report.toUpperCase()}") {
+
+                            catchError(
+                                buildResult: 'FAILURE',
+                                stageResult: 'FAILURE'
+                            ) {
+
+                                sh """
+                                    echo "======================================"
+                                    echo " Running: ${scenario.name}"
+                                    echo "======================================"
+
+                                    bru run "Action Post/${scenario.name}" --env Stage --reporter-junit reports/${scenario.report}-junit.xml --reporter-html reports/${scenario.report}-report.html
+
+                                    echo "======================================"
+                                    echo " Completed: ${scenario.name}"
+                                    echo "======================================"
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+           stage('Run Post Scenarios') {
+            steps {
+                script {
+
+                    def scenarios = [
+                        [
+                            name: 'MD-T31Delete own post successfully',
+                            report: 'md-t31'
+                        ]
+                    ]
+
+                    for (scenario in scenarios) {
+
+                        stage("Run ${scenario.report.toUpperCase()}") {
+
+                            catchError(
+                                buildResult: 'FAILURE',
+                                stageResult: 'FAILURE'
+                            ) {
+
+                                sh """
+                                    echo "======================================"
+                                    echo " Running: ${scenario.name}"
+                                    echo "======================================"
+
+                                    bru run "Post/${scenario.name}" --env Stage --reporter-junit reports/${scenario.report}-junit.xml --reporter-html reports/${scenario.report}-report.html
+
+                                    echo "======================================"
+                                    echo " Completed: ${scenario.name}"
+                                    echo "======================================"
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     post {
 
         always {
