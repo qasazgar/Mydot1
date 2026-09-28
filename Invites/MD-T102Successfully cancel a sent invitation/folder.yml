@@ -1,0 +1,19 @@
+info:
+  name: MD-T102Successfully cancel a sent invitation
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
+
+docs:
+  content: |2-
+      Given the user is logged in \
+    And the user is on the "Invite Friends" page \
+    And there is an active invitation for the target phone number \
+    When the user selects the "Cancel Invitation" option \
+    Then the system should cancel the invitation successfully \
+    And the invitation status should be changed to "Cancelled" \
+    And the target phone number should no longer appear in the active invitations list \
+    And a successful cancellation message should be displayed
+  type: text/markdown

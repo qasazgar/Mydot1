@@ -1,0 +1,17 @@
+info:
+  name: MD-T60Incorrect OTP code
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    Given the user has entered a valid mobile number and is on the "Verification Code & New Password" page \
+    When the user enters an incorrect OTP code \
+    And enters a valid new password (meeting all criteria) \
+    And clicks on the "ثبت" (Submit) button \
+    Then the system displays an error message (e.g., "Invalid verification code") \
+    And the password is not updated And the user remains on the same page
+  type: text/markdown

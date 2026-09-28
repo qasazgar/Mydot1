@@ -1,0 +1,19 @@
+info:
+  name: MD-T100Successfully invite a friend using a valid phone number
+  type: folder
+  seq: 2
+
+request:
+  auth: inherit
+
+docs:
+  content: |2-
+      Given the user is logged in \
+    And the user is on the "Invite Friends" page \
+    And the entered phone number is valid and belongs to a user who has not been invited yet \
+    When the user enters the friend's phone number \
+    And clicks the "Invite" button \
+    Then the invitation request should be sent successfully \
+    And a success message should be displayed \
+    And the invited phone number should be displayed in the invitation list<br/>
+  type: text/markdown

@@ -1,0 +1,18 @@
+info:
+  name: MD-T103Re-invite a phone number that has already been invited
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    Given the user is logged in \
+    And the user is on the "Invite Friends" page \
+    And the phone number has already been invited by the current user \
+    When the user enters the phone number again \
+    And clicks the "Invite" button \
+    Then a duplicate invitation should not be sent\
+     And an appropriate message indicating that the invitation was already sent should be displayed<br/>
+  type: text/markdown

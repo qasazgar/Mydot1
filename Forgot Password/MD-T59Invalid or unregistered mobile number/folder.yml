@@ -1,0 +1,16 @@
+info:
+  name: MD-T59Invalid or unregistered mobile number
+  type: folder
+  seq: 3
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    Given the user is on the "Forgot Password" page \
+    When the user enters an invalid or unregistered mobile number \
+    And clicks on the "بعدی" (Next) button \
+    Then the system displays an error message (e.g., "Mobile number not found") \
+    And the user remains on the same page
+  type: text/markdown
