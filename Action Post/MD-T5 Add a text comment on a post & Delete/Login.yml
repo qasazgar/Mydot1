@@ -1,11 +1,11 @@
 info:
-  name: Create Comment
+  name: Login
   type: http
-  seq: 3
+  seq: 1
 
 http:
   method: POST
-  url: "{{Url}}/dots/"
+  url: "{{Url}}/auth/login/"
   headers:
     - name: accept
       value: application/json, text/plain, */*
@@ -15,6 +15,8 @@ http:
       value: no-cache
     - name: content-type
       value: application/json
+    - name: Cookie
+      value: csrftoken=1myTX0tPxIMZ41BbVHFKcL5NjpfhsjGM; sessionid=v0afup4cq8ctofux08e37nwklnel09fn; _clck=1dpuog2%5E2%5Eg94%5E0%5E2436
     - name: origin
       value: https://mydot.one
     - name: pragma
@@ -41,13 +43,8 @@ http:
     type: json
     data: |-
       {
-        "dot_type": "reply",
-        "content": "test6",
-        "reply_to": "{{dot_id}}",
-        "repost_of": null,
-        "quote_of": null,
-        "media_ids": [],
-        "reply_permission": "everyone"
+        "identifier": "sazgar",
+        "password": "Ahmad@123"
       }
   auth: inherit
 
@@ -55,26 +52,25 @@ runtime:
   scripts:
     - type: after-response
       code: |-
-        const threadRootId = res.body.id;
+        const message = res.getBody().message;
 
-        bru.setVar("thread_root_id", threadRootId);
-
-        console.log("thread_root_id:", threadRootId);
+        bru.setVar("error_message", message);
     - type: tests
       code: |-
         tests :{
-          test("Status code should be 201", function() {
-            expect(res.status).to.equal(201);
+          test("Status code should be 200", function() {
+            expect(res.status).to.equal(200);
+
           });
 
-          test("Response time should be less than 1000 ms", function() {
-            expect(res.responseTime).to.be.lessThan(1000);
+          test("Response time should be less than 500 ms", function() {
+            expect(res.responseTime).to.be.lessThan(500);
           });
         }
 
 settings:
-  encodeUrl: false
+  encodeUrl: true
   timeout: 0
   followRedirects: true
   maxRedirects: 5
-  forwardAuthorizationHeader: false
+  forwardAuthorizationHeader: true

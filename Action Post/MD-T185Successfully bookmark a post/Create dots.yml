@@ -1,10 +1,10 @@
 info:
-  name: Create Comment
+  name: Create dots
   type: http
-  seq: 3
+  seq: 1
 
 http:
-  method: POST
+  method: post
   url: "{{Url}}/dots/"
   headers:
     - name: accept
@@ -15,6 +15,8 @@ http:
       value: no-cache
     - name: content-type
       value: application/json
+    - name: Cookie
+      value: csrftoken=1myTX0tPxIMZ41BbVHFKcL5NjpfhsjGM; sessionid=v0afup4cq8ctofux08e37nwklnel09fn; _clck=1dpuog2%5E2%5Eg94%5E0%5E2436; __Secure-access_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg4NjE1NjI2LCJpYXQiOjE3ODg2MDM3NDksImp0aSI6ImJjZTY4ZDA5YjI0NzQ0NTJhNDkzOTAwZmJjZWQxYTRjIiwidXNlcl9pZCI6IjhlZjQ4MzVmLTgxZjEtNDBhOC04MmI1LTFmMjNiZDIwNDA5MCJ9.oxWXPTy7Zl7f_t-EbOSOcNC5EVE7hGmEd3qYdmozpB9d5Fk7pY7ccviJuE55SxdaAY__FdcC-0o7CCxqvq0T0Q; is_logged_in=true
     - name: origin
       value: https://mydot.one
     - name: pragma
@@ -41,9 +43,9 @@ http:
     type: json
     data: |-
       {
-        "dot_type": "reply",
-        "content": "test6",
-        "reply_to": "{{dot_id}}",
+        "dot_type": "dot",
+        "content": "test",
+        "reply_to": null,
         "repost_of": null,
         "quote_of": null,
         "media_ids": [],
@@ -55,11 +57,9 @@ runtime:
   scripts:
     - type: after-response
       code: |-
-        const threadRootId = res.body.id;
+        const dotId = res.body.id;
 
-        bru.setVar("thread_root_id", threadRootId);
-
-        console.log("thread_root_id:", threadRootId);
+        bru.setVar("dot_id", dotId);
     - type: tests
       code: |-
         tests :{
