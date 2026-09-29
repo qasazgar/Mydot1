@@ -33,3 +33,9 @@ variables:
   - name: invalid_phone_number
     value: "09120000000"
     description: ""
+  - name: phone_number
+    value: "09127988405"
+    description: ""
+  - name: Invalid_Otp
+    value: "123456"
+    description: ""
