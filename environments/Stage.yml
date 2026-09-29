@@ -30,6 +30,6 @@ variables:
   - name: Password
     value: Ahmad@123
     description: ""
-  - name: thread_root_id
-    value: ""
+  - name: invalid_phone_number
+    value: "09120000000"
     description: ""
