@@ -43,7 +43,7 @@ runtime:
       code: |-
         const dotId = res.body.id;
 
-        bru.setVar("dot_id_Quote", dotId);
+        bru.setEnvVar("dot_id_Quote", dotId);
     - type: tests
       code: |-
         tests :{
