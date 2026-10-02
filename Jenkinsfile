@@ -268,17 +268,26 @@ pipeline {
 
                     for (scenario in scenarios) {
 
-                        echo "======================================"
-                        echo " Running: ${scenario}"
-                        echo "======================================"
+                        stage("Run ${scenario}") {
 
-                        sh """
-                            bru run "Action Post/${scenario}" --env Stage
-                        """
+                            catchError(
+                                buildResult: 'FAILURE',
+                                stageResult: 'FAILURE'
+                            ) {
 
-                        echo "======================================"
-                        echo " Completed: ${scenario}"
-                        echo "======================================"
+                                sh """
+                                    echo "======================================"
+                                    echo " Running: ${scenario}"
+                                    echo "======================================"
+
+                                    bru run "Action Post/${scenario}" --env Stage
+
+                                    echo "======================================"
+                                    echo " Completed: ${scenario}"
+                                    echo "======================================"
+                                """
+                            }
+                        }
                     }
                 }
             }
@@ -347,16 +356,18 @@ pipeline {
         }
 
         success {
+
             echo "======================================"
             echo " ALL TESTS PASSED"
             echo "======================================"
         }
 
         failure {
+
             echo "======================================"
             echo " SOME TESTS FAILED"
             echo "======================================"
         }
     }
 }
-پ
+
