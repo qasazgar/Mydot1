@@ -58,8 +58,8 @@ runtime:
     - type: tests
       code: |-
         tests :{
-          test("Status code should be 200", function() {
-            expect(res.status).to.equal(200);
+          test("Status code should be 202", function() {
+            expect(res.status).to.equal(202);
 
           });
 
@@ -73,3 +73,4 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,7 +1,7 @@
 info:
   name: Delete repost
   type: http
-  seq: 4
+  seq: 2
 
 http:
   method: DELETE
