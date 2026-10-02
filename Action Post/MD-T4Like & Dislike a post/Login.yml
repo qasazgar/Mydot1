@@ -54,7 +54,7 @@ runtime:
       code: |-
         const message = res.getBody().message;
 
-        bru.setVar("error_message", message);
+        bru.setEnvVar("error_message", message);
     - type: tests
       code: |-
         tests :{
