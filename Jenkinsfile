@@ -303,3 +303,60 @@ pipeline {
                                 buildResult: 'FAILURE',
                                 stageResult: 'FAILURE'
                             ) {
+
+                                sh """
+                                    echo "======================================"
+                                    echo " Running: ${scenario.name}"
+                                    echo "======================================"
+
+                                    bru run "Post/${scenario.name}" --env Stage --reporter-junit "reports/${scenario.report}-junit.xml" --reporter-html "reports/${scenario.report}-report.html"
+
+                                    echo "======================================"
+                                    echo " Completed: ${scenario.name}"
+                                    echo "======================================"
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+
+        always {
+
+            echo "======================================"
+            echo " Publishing Test Results"
+            echo "======================================"
+
+            junit(
+                allowEmptyResults: true,
+                testResults: 'reports/*-junit.xml'
+            )
+
+            archiveArtifacts(
+                artifacts: 'reports/*.html',
+                allowEmptyArchive: true
+            )
+
+            echo "======================================"
+            echo " All Reports Published"
+            echo "======================================"
+        }
+
+        success {
+            echo "======================================"
+            echo " ALL TESTS PASSED"
+            echo "======================================"
+        }
+
+        failure {
+            echo "======================================"
+            echo " SOME TESTS FAILED"
+            echo "======================================"
+        }
+    }
+}
+پ
