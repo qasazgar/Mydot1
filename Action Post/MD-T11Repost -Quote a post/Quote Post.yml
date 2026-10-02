@@ -37,6 +37,8 @@ http:
 
 runtime:
   scripts:
+    - type: before-request
+      code: console.log("LIKE dot_id:", bru.getEnvVar("dot_id"));
     - type: after-response
       code: |-
         const dotId = res.body.id;
