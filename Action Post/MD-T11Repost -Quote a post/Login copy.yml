@@ -5,11 +5,7 @@ info:
 
 http:
   method: POST
-<<<<<<< HEAD:Action Post/MD-T11Repost -Quote a post/Login copy.yml
   url: "{{Url}}/auth/login/"
-=======
-  url: "{{Url}}/dots/"
->>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c:Action Post/MD-T5 Add a text comment on a post & Delete/Create dots.yml
   headers:
     - name: accept
       value: application/json, text/plain, */*
@@ -20,25 +16,21 @@ http:
     - name: content-type
       value: application/json
     - name: Cookie
-<<<<<<< HEAD:Action Post/MD-T11Repost -Quote a post/Login copy.yml
       value: csrftoken=1myTX0tPxIMZ41BbVHFKcL5NjpfhsjGM; sessionid=v0afup4cq8ctofux08e37nwklnel09fn; _clck=1dpuog2%5E2%5Eg94%5E0%5E2436
-=======
-      value: _clck=1dpuog2%5E2%5Eg94%5E0%5E2436; csrftoken=zW1JmrDBXfRRfND42R2kAUu9NxrLk7rq; sessionid=4s5ilw7lw0jjs4t3obux07rs31f8mubv
->>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c:Action Post/MD-T5 Add a text comment on a post & Delete/Create dots.yml
     - name: origin
-      value: https://stage.dpsb.ir
+      value: https://mydot.one
     - name: pragma
       value: no-cache
     - name: priority
       value: u=1, i
     - name: referer
-      value: https://stage.dpsb.ir/
+      value: https://mydot.one/
     - name: sec-ch-ua
-      value: '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"'
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
     - name: sec-ch-ua-mobile
-      value: ?0
+      value: ?1
     - name: sec-ch-ua-platform
-      value: '"Windows"'
+      value: '"iOS"'
     - name: sec-fetch-dest
       value: empty
     - name: sec-fetch-mode
@@ -46,7 +38,7 @@ http:
     - name: sec-fetch-site
       value: same-site
     - name: user-agent
-      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36
+      value: Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
   body:
     type: json
     data: |-
@@ -62,12 +54,12 @@ runtime:
       code: |-
         const message = res.getBody().message;
 
-        bru.setEnvVar("error_message", message);
+        bru.setVar("error_message", message);
     - type: tests
       code: |-
         tests :{
-          test("Status code should be 200", function() {
-            expect(res.status).to.equal(200);
+          test("Status code should be 202", function() {
+            expect(res.status).to.equal(202);
 
           });
 
