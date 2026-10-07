@@ -1,0 +1,114 @@
+info:
+  name: Edit Dots
+  type: http
+  seq: 3
+
+http:
+  method: patch
+  url: "{{Url}}/dots/{{dot_id}}/"
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: Cookie
+      value: amplitude_idundefineddpsb.ir=eyJvcHRPdXQiOmZhbHNlLCJzZXNzaW9uSWQiOm51bGwsImxhc3RFdmVudFRpbWUiOm51bGwsImV2ZW50SWQiOjAsImlkZW50aWZ5SWQiOjAsInNlcXVlbmNlTnVtYmVyIjowfQ==; csrftoken=iR4HmbSMZqBCz9WEVGqAkvSh7S3BTPXI; ajs_user_id=e44098508faf888ed71a76ed407b8831bad1d2e65bbe500ba75b629dee170c45; ajs_anonymous_id=16624023-b04c-417e-9ff7-0cb7cd92271b; ajs_group_id=BEW1-OXXH-RIZ6-B6K4; sessionid=y5hu9qthbo3w5l3qwk2az3leaew63cx6; amplitude_id_cf620211dc906be4ab7c92f52766759ddpsb.ir=eyJkZXZpY2VJZCI6IjE0ZTBjMTUwLTQwYTQtNDZkNi04YjgwLWEzODAxNjg5MWIwNVIiLCJ1c2VySWQiOiJlNDQwOTg1MDhmYWY4ODhlZDcxYTc2ZWQ0MDdiODgzMWJhZDFkMmU2NWJiZTUwMGJhNzViNjI5ZGVlMTcwYzQ1Iiwib3B0T3V0IjpmYWxzZSwic2Vzc2lvbklkIjoxNzkxMzcwNzU5MTAzLCJsYXN0RXZlbnRUaW1lIjoxNzkxMzcwODU5NjQwLCJldmVudElkIjozMzMsImlkZW50aWZ5SWQiOjIwOSwic2VxdWVuY2VOdW1iZXIiOjU0Mn0=; access_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkxMzc3NjQ2LCJpYXQiOjE3OTEzNzI3MDAsImp0aSI6IjY2MjczYWQyMjI0MDRhYjFhYjg4M2VlNjBlNDI0ZmQzIiwidXNlcl9pZCI6IjJjZmVhNmFkLTM0MmMtNDNiNS05ZmM1LTYxZTVmNDJkNTQ1OSIsInJlZnJlc2hfanRpIjoiZWJlYmY5ZjEzMzhhNDc3ZmFlNzhkY2JjMDZiMjk5MTIifQ.NJotuAq3t8ytqGPOylwszuWz7fKM_5jbg4pVrvJ6ezR4KvC42cujPld9CPo74QrQRBMKd-2dG5AKBpqsMCjLVg; is_logged_in=true
+    - name: origin
+      value: https://stage.dpsb.ir
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://stage.dpsb.ir/
+    - name: sec-ch-ua
+      value: '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"'
+    - name: sec-ch-ua-mobile
+      value: ?1
+    - name: sec-ch-ua-platform
+      value: '"iOS"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
+  body:
+    type: json
+    data: |-
+      {
+        "content": "# {{post_title}}\n\n{{post_description}}",
+        "reply_permission": "everyone",
+        "media_ids": []
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const posts = [
+          {
+            title: "آیا برنامه‌نویس‌ها حذف می‌شوند؟",
+            description: "با ورود AI، بخش زیادی از کدنویسی در حال خودکار شدن است؛ اما مسئله اصلی حذف برنامه‌نویس نیست. برنامه‌نویسی در حال تغییر است و ارزش مهارت‌هایی مثل حل مسئله، معماری و تصمیم‌گیری بیشتر از قبل می‌شود.",
+            image_id: "IMAGE_ID_1"
+          },
+
+          {
+            title: "AI دیگر فقط جواب نمی‌دهد؛ عمل می‌کند",
+            description: "نسل جدید AI فقط به سؤال پاسخ نمی‌دهد؛ هدف می‌گیرد، تصمیم می‌گیرد، ابزارها را اجرا می‌کند و کار را تا رسیدن به نتیجه جلو می‌برد. عصر AI Agentها تازه شروع شده است.",
+            image_id: "IMAGE_ID_2"
+          },
+
+          {
+            title: "QA در عصر AI",
+            description: "AI می‌تواند سناریوهای تست تولید کند، APIها را بررسی کند، Test Data بسازد و Regression Test اجرا کند؛ اما کیفیت فقط اجرای تست نیست. QA باید بفهمد محصول چه مشکلی را برای کاربر حل می‌کند و چه ریسک‌هایی دارد.",
+            image_id: "IMAGE_ID_3"
+          },
+
+          {
+            title: "آیا یک AI برای آینده کافی است؟",
+            description: "تصور کنید یک Agent نیازمندی را تحلیل کند، یکی کد بنویسد، دیگری تست کند و یک Agent دیگر امنیت را بررسی کند. آینده Software Development شاید به جای یک AI، متعلق به همکاری چندین AI Agent باشد.",
+            image_id: "IMAGE_ID_4"
+          },
+
+          {
+            title: "AI بدون Chip وجود ندارد",
+            description: "پشت هر مدل قدرتمند AI، زیرساخت قدرتمندی قرار دارد. GPU، پردازنده‌های اختصاصی AI، تراشه‌های پیشرفته و Data Centerها ستون فقرات رقابت بزرگ تکنولوژی هستند.",
+            image_id: "IMAGE_ID_5"
+          }
+        ];
+
+        // انتخاب یک پست کامل به صورت Random
+        const selectedPost = posts[Math.floor(Math.random() * posts.length)];
+
+        // ذخیره متغیرها
+        bru.setVar("post_title", selectedPost.title);
+        bru.setVar("post_description", selectedPost.description);
+        bru.setVar("image_id", selectedPost.image_id);
+
+        console.log("Selected Post:", selectedPost);
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 204", function() {
+            expect(res.status).to.equal(204);
+          });
+
+          test("Response time should be less than 1000 ms", function() {
+            expect(res.responseTime).to.be.lessThan(1000);
+          });
+        }
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

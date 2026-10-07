@@ -299,8 +299,8 @@ pipeline {
 
                     def scenarios = [
                         [
-                            name: 'MD-T1Create Post (Text Only)',
-                            report: 'md-t1'
+                            name: 'MD-T1&30Create & Edit Post (Text)',
+                            report: 'md-t1&30'
                         ],[
                             name: 'MD-T2Create Post (Text + Image)',
                             report: 'md-t2'
