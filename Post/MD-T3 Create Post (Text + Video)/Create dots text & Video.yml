@@ -1,0 +1,135 @@
+info:
+  name: Create dots text & Video
+  type: http
+  seq: 2
+
+http:
+  method: post
+  url: "{{Url}}/dots/"
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: origin
+      value: https://mydot.one
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://mydot.one/
+    - name: sec-ch-ua
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
+    - name: sec-ch-ua-mobile
+      value: ?1
+    - name: sec-ch-ua-platform
+      value: '"iOS"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
+  body:
+    type: json
+    data: |-
+      {
+        "dot_type": "dot",
+        "content": "# {{post_title}}\n\n{{post_description}}",
+        "reply_to": null,
+        "repost_of": null,
+        "quote_of": null,
+        "media_ids": [
+          "{{Vedio_id}}"
+        ],
+        "reply_permission": "everyone"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const movies = [
+          {
+            title: "Avatar: Fire and Ash",
+            description: "تریلر رسمی Avatar: Fire and Ash؛ جیمز کامرون دوباره ما را به دنیای پاندورا می‌برد. این بار با داستانی تاریک‌تر، قبایل جدید و نبردی بزرگ‌تر.",
+            image_id: "5af68853-2996-4861-919c-e9259c2d3ec1"
+          },
+          {
+            title: "The Batman Part II",
+            description: "تریلر فیلم The Batman Part II؛ بتمن دوباره به گاتهام برمی‌گردد تا با تهدیدهای تازه و جنایتکاران خطرناک‌تر روبه‌رو شود.",
+            image_id: "5af68853-2996-4861-919c-e9259c2d3ec1"
+          },
+          {
+            title: "Avengers: Secret Wars",
+            description: "تریلر Avengers: Secret Wars؛ بزرگ‌ترین قهرمانان مارول برای یکی از مهم‌ترین نبردهای تاریخ MCU دوباره کنار هم قرار می‌گیرند.",
+            image_id: "5af68853-2996-4861-919c-e9259c2d3ec1"
+          },
+          {
+            title: "Spider-Man: Brand New Day",
+            description: "تریلر Spider-Man: Brand New Day؛ مرد عنکبوتی وارد فصل تازه‌ای از زندگی خود می‌شود و با تهدیدی جدید روبه‌رو خواهد شد.",
+            image_id: "5af68853-2996-4861-919c-e9259c2d3ec1"
+          },
+          {
+            title: "Superman",
+            description: "تریلر Superman؛ داستان تازه‌ای از مرد پولادین با تمرکز بر امید، هویت و جایگاه سوپرمن در دنیایی که هنوز به یک قهرمان نیاز دارد.",
+            image_id: "5af68853-2996-4861-919c-e9259c2d3ec1"
+          },
+          {
+            title: "Fantastic Four: First Steps",
+            description: "تریلر Fantastic Four: First Steps؛ خانواده‌ای متفاوت از قهرمانان وارد دنیای مارول می‌شوند و با یکی از بزرگ‌ترین تهدیدهای کیهانی روبه‌رو خواهند شد.",
+            image_id: "5af68853-2996-4861-919c-e9259c2d3ec1"
+          },
+          {
+            title: "Jurassic World Rebirth",
+            description: "تریلر Jurassic World Rebirth؛ انسان‌ها دوباره وارد دنیایی می‌شوند که دایناسورها در آن آزادانه زندگی می‌کنند و یک مأموریت خطرناک آغاز می‌شود.",
+            image_id: "5af68853-2996-4861-919c-e9259c2d3ec1"
+          },
+          {
+            title: "Mission: Impossible",
+            description: "تریلر جدید Mission: Impossible؛ اتان هانت بار دیگر وارد مأموریتی غیرممکن می‌شود؛ مأموریتی که می‌تواند آخرین مأموریت او باشد.",
+            image_id: "5af68853-2996-4861-919c-e9259c2d3ec1"
+          }
+        ];
+
+        // انتخاب Random یک فیلم کامل
+        const selectedMovie = movies[Math.floor(Math.random() * movies.length)];
+
+        // ذخیره متغیرها
+        bru.setVar("post_title", selectedMovie.title);
+        bru.setVar("post_description", selectedMovie.description);
+        bru.setVar("Vedio_id", selectedMovie.image_id);
+
+        // نمایش در Console
+        console.log("Selected Movie:", selectedMovie);
+    - type: after-response
+      code: |-
+        const dotId = res.body.id;
+
+        bru.setVar("dot_id", dotId);
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 201", function() {
+            expect(res.status).to.equal(201);
+          });
+
+          test("Response time should be less than 1000 ms", function() {
+            expect(res.responseTime).to.be.lessThan(1000);
+          });
+        }
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -43,7 +43,7 @@ http:
     type: json
     data: |-
       {
-        "identifier": "sazgar",
+        "identifier": "sazgar55",
         "password": "Ahmad@123"
       }
   auth: inherit
@@ -73,3 +73,4 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
+  forwardAuthorizationHeader: true
