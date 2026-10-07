@@ -314,9 +314,15 @@ pipeline {
 
                     def scenarios = [
                         [
-                            name: 'MD-T31Delete own post successfully',
-                            report: 'md-t31'
-                        ]
+                            name: 'MD-T1Create Post (Text Only)',
+                            report: 'md-t1'
+                        ],[
+                            name: 'MD-T2Create Post (Text + Image)',
+                            report: 'md-t2'
+                        ],[
+                            name: 'MD-T3 Create Post (Text + Video)',
+                            report: 'md-t3'
+                        ],
                     ]
 
                     for (scenario in scenarios) {
