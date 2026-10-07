@@ -49,8 +49,8 @@ runtime:
     - type: tests
       code: |-
         tests :{
-          test("Status code should be 202", function() {
-            expect(res.status).to.equal(202);
+          test("Status code should be 204", function() {
+            expect(res.status).to.equal(204);
 
           });
 
