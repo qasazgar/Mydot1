@@ -2,7 +2,10 @@ info:
   name: Delete Bookmark
   type: http
   seq: 3
+<<<<<<< HEAD
 
+=======
+>>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c
 http:
   method: delete
   url: "{{Url}}/dots/{{dot_id}}/bookmark/"

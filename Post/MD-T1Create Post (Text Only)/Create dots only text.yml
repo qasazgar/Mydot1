@@ -1,11 +1,11 @@
 info:
-  name: Login
+  name: "Create dots only text + Vedio "
   type: http
-  seq: 1
+  seq: 4
 
 http:
-  method: POST
-  url: "{{Url}}/auth/login/"
+  method: post
+  url: "{{Url}}/dots/"
   headers:
     - name: accept
       value: application/json, text/plain, */*
@@ -15,10 +15,8 @@ http:
       value: no-cache
     - name: content-type
       value: application/json
-    - name: Cookie
-      value: _clck=1dpuog2%5E2%5Eg94%5E0%5E2436; csrftoken=zW1JmrDBXfRRfND42R2kAUu9NxrLk7rq; sessionid=4s5ilw7lw0jjs4t3obux07rs31f8mubv
     - name: origin
-      value: https://stage.dpsb.ir
+      value: https://mydot.one
     - name: pragma
       value: no-cache
     - name: priority
@@ -26,11 +24,11 @@ http:
     - name: referer
       value: https://mydot.one/
     - name: sec-ch-ua
-      value: '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"'
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
     - name: sec-ch-ua-mobile
-      value: ?0
+      value: ?1
     - name: sec-ch-ua-platform
-      value: '"Windows"'
+      value: '"iOS"'
     - name: sec-fetch-dest
       value: empty
     - name: sec-fetch-mode
@@ -38,31 +36,33 @@ http:
     - name: sec-fetch-site
       value: same-site
     - name: user-agent
-      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36
+      value: Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
   body:
     type: json
     data: |-
       {
-        "identifier": "sazgar55",
-        "password": "Ahmad@123"
+        "dot_type": "dot",
+        "content": "test pic ",
+        "reply_to": null,
+        "repost_of": null,
+        "quote_of": null,
+        "media_ids": ["669e5da4-1e91-408d-a946-8822ad4984ce"],
+        "reply_permission": "everyone"
       }
   auth: inherit
 
 runtime:
   scripts:
-<<<<<<< HEAD
     - type: after-response
       code: |-
-        const message = res.getBody().message;
+        const dotId = res.body.id;
 
-        bru.setEnvVar("error_message", message);
-=======
->>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c
+        bru.setVar("dot_id3", dotId);
     - type: tests
       code: |-
         tests :{
-          test("Status code should be 200", function() {
-            expect(res.status).to.equal(200);
+          test("Status code should be 201", function() {
+            expect(res.status).to.equal(201);
           });
 
           test("Response time should be less than 1000 ms", function() {

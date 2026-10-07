@@ -1,7 +1,7 @@
 info:
   name: "like Post "
   type: http
-  seq: 3
+  seq: 2
 
 http:
   method: post

@@ -1,7 +1,7 @@
 info:
   name: MD-T5 Add a text comment on a post & Delete
   type: folder
-  seq: 5
+  seq: 6
 
 request:
   auth: inherit

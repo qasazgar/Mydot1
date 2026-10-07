@@ -1,11 +1,15 @@
 info:
-  name: Create dots only text + music
+<<<<<<<< HEAD:Post/MD-T1Create Post (Text Only)/Create dots only text + image.yml
+  name: Create dots only text + image
+========
+  name: Login
+>>>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c:Post/MD-T3 Create Post (Text + Video)/Login.yml
   type: http
-  seq: 2
+  seq: 3
 
 http:
-  method: post
-  url: "{{Url}}/dots/"
+  method: POST
+  url: "{{Url}}/auth/login/"
   headers:
     - name: accept
       value: application/json, text/plain, */*
@@ -15,6 +19,8 @@ http:
       value: no-cache
     - name: content-type
       value: application/json
+    - name: Cookie
+      value: csrftoken=1myTX0tPxIMZ41BbVHFKcL5NjpfhsjGM; sessionid=v0afup4cq8ctofux08e37nwklnel09fn; _clck=1dpuog2%5E2%5Eg94%5E0%5E2436
     - name: origin
       value: https://mydot.one
     - name: pragma
@@ -41,13 +47,18 @@ http:
     type: json
     data: |-
       {
+<<<<<<<< HEAD:Post/MD-T1Create Post (Text Only)/Create dots only text + image.yml
         "dot_type": "dot",
-        "content": "test1",
+        "content": "test pic ",
         "reply_to": null,
         "repost_of": null,
         "quote_of": null,
-        "media_ids": ["710a9374-69cf-4dd5-b1a1-90bc88476c3d"],
+        "media_ids": ["21d772e8-9802-41fe-b5ac-52bb2e52ae2e"],
         "reply_permission": "everyone"
+========
+        "identifier": "sazgar55",
+        "password": "Ahmad@123"
+>>>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c:Post/MD-T3 Create Post (Text + Video)/Login.yml
       }
   auth: inherit
 
@@ -55,24 +66,29 @@ runtime:
   scripts:
     - type: after-response
       code: |-
-        const dotId = res.body.id;
+        const message = res.getBody().message;
 
-        bru.setVar("dot_id1", dotId);
+<<<<<<<< HEAD:Post/MD-T1Create Post (Text Only)/Create dots only text + image.yml
+        bru.setVar("dot_id2", dotId);
+========
+        bru.setVar("error_message", message);
+>>>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c:Post/MD-T3 Create Post (Text + Video)/Login.yml
     - type: tests
       code: |-
         tests :{
-          test("Status code should be 201", function() {
-            expect(res.status).to.equal(201);
+          test("Status code should be 200", function() {
+            expect(res.status).to.equal(200);
+
           });
 
-          test("Response time should be less than 1000 ms", function() {
-            expect(res.responseTime).to.be.lessThan(1000);
+          test("Response time should be less than 500 ms", function() {
+            expect(res.responseTime).to.be.lessThan(500);
           });
         }
 
 settings:
-  encodeUrl: false
+  encodeUrl: true
   timeout: 0
   followRedirects: true
   maxRedirects: 5
-  forwardAuthorizationHeader: false
+  forwardAuthorizationHeader: true

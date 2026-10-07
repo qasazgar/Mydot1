@@ -1,5 +1,9 @@
 info:
+<<<<<<<< HEAD:Post/MD-T1Create Post (Text Only)/Create dots only text + music.yml
+  name: Create dots only text + music
+========
   name: Login
+>>>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c:Post/MD-T2Create Post (Text + Image)/Login.yml
   type: http
   seq: 1
 
@@ -43,8 +47,18 @@ http:
     type: json
     data: |-
       {
+<<<<<<<< HEAD:Post/MD-T1Create Post (Text Only)/Create dots only text + music.yml
+        "dot_type": "dot",
+        "content": "test1",
+        "reply_to": null,
+        "repost_of": null,
+        "quote_of": null,
+        "media_ids": ["710a9374-69cf-4dd5-b1a1-90bc88476c3d"],
+        "reply_permission": "everyone"
+========
         "identifier": "sazgar55",
         "password": "Ahmad@123"
+>>>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c:Post/MD-T2Create Post (Text + Image)/Login.yml
       }
   auth: inherit
 
@@ -54,12 +68,16 @@ runtime:
       code: |-
         const message = res.getBody().message;
 
+<<<<<<<< HEAD:Post/MD-T1Create Post (Text Only)/Create dots only text + music.yml
+        bru.setVar("dot_id1", dotId);
+========
         bru.setVar("error_message", message);
+>>>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c:Post/MD-T2Create Post (Text + Image)/Login.yml
     - type: tests
       code: |-
         tests :{
-          test("Status code should be 202", function() {
-            expect(res.status).to.equal(202);
+          test("Status code should be 200", function() {
+            expect(res.status).to.equal(200);
 
           });
 

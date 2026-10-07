@@ -1,7 +1,7 @@
 info:
   name: MD-T4Like & Dislike a post
   type: folder
-  seq: 1
+  seq: 2
 
 request:
   auth: inherit

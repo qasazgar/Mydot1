@@ -57,6 +57,12 @@ runtime:
           }
         }
 
+        console.log("========== CANCEL INVITE DEBUG ==========");
+        console.log("Status Code:", res.status);
+        console.log("Response Time:", res.responseTime);
+        console.log("Response Body:", JSON.stringify(responseData));
+        console.log("==========================================");
+
         test("Status code is 200", () => {
           expect(res.status).to.equal(200);
         });

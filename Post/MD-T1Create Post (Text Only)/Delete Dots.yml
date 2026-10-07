@@ -1,7 +1,11 @@
 info:
   name: Delete Dots text-image
   type: http
+<<<<<<<< HEAD:Post/MD-T1Create Post (Text Only)/Delete Dots text-image.yml
   seq: 6
+========
+  seq: 3
+>>>>>>>> f0d668ba77acc75bdd1417db54c8e3d1deb1d68c:Post/MD-T1Create Post (Text Only)/Delete Dots.yml
 
 http:
   method: DELETE
