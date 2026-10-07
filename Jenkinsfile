@@ -263,7 +263,9 @@ pipeline {
                         'MD-T5 Add a text comment on a post & Delete',
                         'MD-T10Repost a post',
                         'MD-T11Repost -Quote a post',
-                        'MD-T185Successfully bookmark a post'
+                        'MD-T185Successfully bookmark a post',
+                        'MD-T16Mute& un Mute a user from post menu',
+                        'MD-T14Block a user and then unblock the same user'
                     ]
 
                     for (scenario in scenarios) {

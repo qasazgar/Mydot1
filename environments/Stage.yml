@@ -4,8 +4,6 @@ variables:
     value: https://api-stage.dpsb.ir/mydot/api/v1
   - name: access_token
     value: ""
-  - name: dot_id
-    value: ""
   - name: dot_id_Quote
     value: ""
   - name: Otp
@@ -26,3 +24,5 @@ variables:
     value: "09127988405"
   - name: Invalid_Otp
     value: "123456"
+  - name: dot_id
+    value: 2d1103c8-4f92-4068-8a78-26980e793b11

@@ -1,0 +1,7 @@
+info:
+  name: MD-T14Block a user and then unblock the same user
+  type: folder
+  seq: 7
+
+request:
+  auth: inherit

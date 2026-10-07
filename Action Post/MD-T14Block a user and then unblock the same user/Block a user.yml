@@ -1,0 +1,69 @@
+info:
+  name: " Block a user"
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{Url}}/auth/block/"
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: Cookie
+      value: amplitude_idundefineddpsb.ir=eyJvcHRPdXQiOmZhbHNlLCJzZXNzaW9uSWQiOm51bGwsImxhc3RFdmVudFRpbWUiOm51bGwsImV2ZW50SWQiOjAsImlkZW50aWZ5SWQiOjAsInNlcXVlbmNlTnVtYmVyIjowfQ==; csrftoken=iR4HmbSMZqBCz9WEVGqAkvSh7S3BTPXI; ajs_user_id=e44098508faf888ed71a76ed407b8831bad1d2e65bbe500ba75b629dee170c45; ajs_anonymous_id=16624023-b04c-417e-9ff7-0cb7cd92271b; ajs_group_id=BEW1-OXXH-RIZ6-B6K4; sessionid=y5hu9qthbo3w5l3qwk2az3leaew63cx6; access_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkxMzgxNjcwLCJpYXQiOjE3OTEzNzI3MDAsImp0aSI6IjBkMDAwM2E0MGQyMTRmZGU5MWU1NmE5YzY4OWQxZDRlIiwidXNlcl9pZCI6IjJjZmVhNmFkLTM0MmMtNDNiNS05ZmM1LTYxZTVmNDJkNTQ1OSIsInJlZnJlc2hfanRpIjoiZWJlYmY5ZjEzMzhhNDc3ZmFlNzhkY2JjMDZiMjk5MTIifQ.-UDKTzKQD97Ch-r47JX7PayliQJADI8yLXxSnP0jLmbpQRjOiC7hjO8rbbcDNlFifib35DeZPMSLi6zh1MhOmw; is_logged_in=true; amplitude_id_cf620211dc906be4ab7c92f52766759ddpsb.ir=eyJkZXZpY2VJZCI6IjE0ZTBjMTUwLTQwYTQtNDZkNi04YjgwLWEzODAxNjg5MWIwNVIiLCJ1c2VySWQiOiJlNDQwOTg1MDhmYWY4ODhlZDcxYTc2ZWQ0MDdiODgzMWJhZDFkMmU2NWJiZTUwMGJhNzViNjI5ZGVlMTcwYzQ1Iiwib3B0T3V0IjpmYWxzZSwic2Vzc2lvbklkIjoxNzkxMzc2MjA2NTY1LCJsYXN0RXZlbnRUaW1lIjoxNzkxMzgwODEyNDE0LCJldmVudElkIjozOTAsImlkZW50aWZ5SWQiOjI0Mywic2VxdWVuY2VOdW1iZXIiOjYzM30=
+    - name: origin
+      value: https://stage.dpsb.ir
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://stage.dpsb.ir/
+    - name: sec-ch-ua
+      value: '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"'
+    - name: sec-ch-ua-mobile
+      value: ?1
+    - name: sec-ch-ua-platform
+      value: '"iOS"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
+  body:
+    type: json
+    data: |-
+      {
+        "target_id": "4418e7e0-7754-4643-bf37-5ae72ea32fda"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 201", function() {
+            expect(res.status).to.equal(201);
+          });
+
+          test("Response time should be less than 500 ms", function() {
+            expect(res.responseTime).to.be.lessThan(1000);
+          });
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

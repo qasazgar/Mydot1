@@ -1,0 +1,23 @@
+info:
+  name: MD-T16Mute& un Mute a user from post menu
+  type: folder
+  seq: 6
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    Given the user is logged into their account \
+    And the user is on the Feed page \
+    And at least one post is displayed in the Feed \
+    When the user opens the post options menu \
+    And selects "Mute" Then the post should be muted successfully \
+    And the post should no longer be displayed in the user's Feed \
+    When the user navigates to Muted Posts or the related mute settings \
+    Then the muted post should be displayed in the list \
+    When the user selects "Unmute" for the same post \
+    Then the post should be unmuted successfully \
+    And the post should be visible in the Feed again \
+    And the post status should be changed to Unmuted
+  type: text/markdown
