@@ -1,11 +1,11 @@
 info:
-  name: "Mute Post "
+  name: Login User
   type: http
-  seq: 2
+  seq: 1
 
 http:
   method: POST
-  url: "{{Url}}/auth/mute/"
+  url: "{{Url}}/auth/login/"
   headers:
     - name: accept
       value: application/json, text/plain, */*
@@ -16,7 +16,7 @@ http:
     - name: content-type
       value: application/json
     - name: Cookie
-      value: _clck=1dpuog2%5E2%5Eg94%5E0%5E2436; csrftoken=41aBsdy8vUlD2PZ2aKQ7cYxn0NMXyprO; sessionid=ey4f8ou79as4w6d5x97j7ap5e5s26tzb; is_logged_in=true; __Secure-access_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkxMzgyNjg4LCJpYXQiOjE3OTA2ODkwNTQsImp0aSI6IjQ3Y2ZlYWY2ZjY0YjQzMzNiYzY2NTkxZWM1N2NmMTAzIiwidXNlcl9pZCI6IjhlZjQ4MzVmLTgxZjEtNDBhOC04MmI1LTFmMjNiZDIwNDA5MCIsInJlZnJlc2hfanRpIjoiOWVkYzhkNjU1MmEyNDk1ZjhiOTFjZDJmMGEzMDdhYWIifQ.xiKyERKUYx3jcA5FL5RreDc78KwOV9iZbZfjbZKOQN_0hBi_wnzMr2YoKAfQ8wTJZIIrm-8Krx1sEuZtuIFdQQ
+      value: csrftoken=1myTX0tPxIMZ41BbVHFKcL5NjpfhsjGM; sessionid=v0afup4cq8ctofux08e37nwklnel09fn; _clck=1dpuog2%5E2%5Eg94%5E0%5E2436
     - name: origin
       value: https://mydot.one
     - name: pragma
@@ -26,7 +26,7 @@ http:
     - name: referer
       value: https://mydot.one/
     - name: sec-ch-ua
-      value: '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"'
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
     - name: sec-ch-ua-mobile
       value: ?1
     - name: sec-ch-ua-platform
@@ -43,17 +43,23 @@ http:
     type: json
     data: |-
       {
-        "target_id": "4418e7e0-7754-4643-bf37-5ae72ea32fda"
+        "identifier": "sazgar55",
+        "password": "Ahmad@123"
       }
   auth: inherit
 
 runtime:
   scripts:
+    - type: after-response
+      code: |-
+        const message = res.getBody().message;
+
+        bru.setVar("error_message", message);
     - type: tests
       code: |-
         tests :{
-          test("Status code should be 201", function() {
-            expect(res.status).to.equal(201);
+          test("Status code should be 200", function() {
+            expect(res.status).to.equal(200);
 
           });
 
@@ -67,4 +73,4 @@ settings:
   timeout: 0
   followRedirects: true
   maxRedirects: 5
-  forwardAuthorizationHeader: false
+  forwardAuthorizationHeader: true
