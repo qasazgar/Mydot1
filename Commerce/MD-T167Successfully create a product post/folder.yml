@@ -1,0 +1,7 @@
+info:
+  name: MD-T167Successfully create a product post
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit

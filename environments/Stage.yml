@@ -28,3 +28,5 @@ variables:
     value: 2d1103c8-4f92-4068-8a78-26980e793b11
   - name: message
     value: You are not allowed to reply to this dot.
+  - name: Product_id
+    value: de0822c3-d9b2-4516-9037-82ff052cadb7

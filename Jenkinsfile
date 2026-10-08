@@ -345,6 +345,45 @@ pipeline {
                 }
             }
         }
+         stage('Run Commerce Scenarios') {
+            steps {
+                script {
+
+                    def scenarios = [
+                        [
+                            name: 'MD-T167Successfully create a product post',
+                            report: 'md-t167'
+                        ]
+                         
+                     
+                    ]
+
+                    for (scenario in scenarios) {
+
+                        stage("Run ${scenario.report.toUpperCase()}") {
+
+                            catchError(
+                                buildResult: 'FAILURE',
+                                stageResult: 'FAILURE'
+                            ) {
+
+                                sh """
+                                    echo "======================================"
+                                    echo " Running: ${scenario.name}"
+                                    echo "======================================"
+
+                                    bru run "Commerce/${scenario.name}" --env Stage --reporter-junit "reports/${scenario.report}-junit.xml" --reporter-html "reports/${scenario.report}-report.html"
+
+                                    echo "======================================"
+                                    echo " Completed: ${scenario.name}"
+                                    echo "======================================"
+                                """
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     post {
