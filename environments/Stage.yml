@@ -26,3 +26,5 @@ variables:
     value: "123456"
   - name: dot_id
     value: 2d1103c8-4f92-4068-8a78-26980e793b11
+  - name: message
+    value: You are not allowed to reply to this dot.

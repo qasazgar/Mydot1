@@ -1,0 +1,84 @@
+info:
+  name: Cannot Create Comment - Unmentioned User
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{Url}}/dots/"
+  headers:
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: origin
+      value: https://mydot.one
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://mydot.one/
+    - name: sec-ch-ua
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
+    - name: sec-ch-ua-mobile
+      value: ?1
+    - name: sec-ch-ua-platform
+      value: '"iOS"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+  body:
+    type: json
+    data: |-
+      {
+        "dot_type": "reply",
+        "content": "tets",
+        "reply_to": "{{dot_id}}",
+        "repost_of": null,
+        "quote_of": null,
+        "media_ids": [],
+        "reply_permission": "everyone"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const threadRootId = res.body.id;
+
+        bru.setVar("thread_root_id", threadRootId);
+
+        console.log("thread_root_id:", threadRootId);
+        const data = res.getBody();
+
+        bru.setEnvVar("message", data.message);
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 403", function() {
+            expect(res.status).to.equal(403);
+          });
+
+          test("Response time should be less than 1000 ms", function() {
+            expect(res.responseTime).to.be.lessThan(1000);
+          });
+        test("Error message is displayed correctly", function () {
+          const data = res.getBody();
+
+          expect(data.message).to.equal("You are not allowed to reply to this dot.");
+        });
+        }
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

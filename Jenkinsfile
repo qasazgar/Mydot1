@@ -312,6 +312,9 @@ pipeline {
                         ],[
                             name: 'MD-T188 Successfully create a post with music',
                             report:'md-t188'
+                        ],[
+                            name: "MD-T89Create a post with text and image and allow replies only from mentioned users",
+                            report:'md-t89'
                         ]
                      
                     ]
