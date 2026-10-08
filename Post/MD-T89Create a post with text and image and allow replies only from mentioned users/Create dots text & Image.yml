@@ -42,58 +42,17 @@ http:
     data: |-
       {
         "dot_type": "dot",
-        "content": "tets\n\u2068@sazgar3\u206",
+        "content": "tets\n\u2068@sazgar3\u2069",
         "reply_to": null,
         "repost_of": null,
         "quote_of": null,
-        "media_ids": [
-          "{{image_id}}"
-        ],
+        "media_ids": [],
         "reply_permission": "mentioned"
       }
   auth: inherit
 
 runtime:
   scripts:
-    - type: before-request
-      code: |-
-        const posts = [
-          {
-            title: "آیا برنامه‌نویس‌ها حذف می‌شوند؟",
-            description: "شاید سؤال اشتباهی می‌پرسیم. AI در حال تغییر Coding، Testing، Documentation و Code Review است. آینده متعلق به کسی است که بهتر مسئله را می‌فهمد.",
-            image_id: "a1c78386-c1cd-4fec-8589-85ed235c8124"
-          },
-          {
-            title: "AI دیگر فقط جواب نمی‌دهد؛ عمل می‌کند",
-            description: "AI Agent می‌تواند هدف بگیرد، تصمیم بگیرد، ابزار استفاده کند و یک Workflow را جلو ببرد. شاید وقت آن رسیده AI را فقط یک ابزار نبینیم.",
-            image_id: "a1c78386-c1cd-4fec-8589-85ed235c8124"
-          },
-          {
-            title: "QA در عصر AI",
-            description: "AI می‌تواند Test Case تولید کند، Test Data بسازد، API تست کند و Regression اجرا کند. اما آیا واقعاً Product را می‌فهمد؟",
-            image_id: "864d322d-d992-48b3-bf31-5ef74f4f3d0b"
-          },
-          {
-            title: "آیا یک AI برای آینده کافی است؟",
-            description: "یک Agent برای Requirement، یک Agent برای Coding، یک Agent برای Testing و یک Agent برای Security. آینده Software شاید ترکیبی از Human و چند AI Agent باشد.",
-            image_id: "bd5a7870-f887-467e-b7dc-d74d842746fb"
-          },
-          {
-            title: "AI بدون Chip وجود ندارد",
-            description: "پشت هر AI قدرتمند، Compute قدرتمند وجود دارد. GPU، AI Accelerators، Chips و Data Centers بخش مهم رقابت آینده تکنولوژی هستند.",
-            image_id: "32eefc6e-2bab-484b-b52e-24a6ca49b73b"
-          }
-        ];
-
-        // انتخاب یک پست کامل
-        const selectedPost = posts[Math.floor(Math.random() * posts.length)];
-
-        // ذخیره متغیرها
-        bru.setVar("post_title", selectedPost.title);
-        bru.setVar("post_description", selectedPost.description);
-        bru.setVar("image_id", selectedPost.image_id);
-
-        console.log("Selected Post:", selectedPost);
     - type: after-response
       code: |-
         const dotId = res.body.id;
