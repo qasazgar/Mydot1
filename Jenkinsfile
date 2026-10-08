@@ -351,7 +351,7 @@ pipeline {
 
                     def scenarios = [
                         [
-                            name: 'MD-T167Successfully create a product post',
+                            name: 'MD-T167Successfully create and Edit product post',
                             report: 'md-t167'
                         ]
                          

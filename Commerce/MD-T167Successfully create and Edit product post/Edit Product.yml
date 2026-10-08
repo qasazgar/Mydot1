@@ -1,0 +1,165 @@
+info:
+  name: Edit Product
+  type: http
+  seq: 3
+
+http:
+  method: patch
+  url: "{{Url}}/commerce/{{Product_id}}/"
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: Cookie
+      value: csrftoken=CEjBWVNOye3eC52f0pUVstC7wLQW5lck; amplitude_idundefineddpsb.ir=eyJvcHRPdXQiOmZhbHNlLCJzZXNzaW9uSWQiOm51bGwsImxhc3RFdmVudFRpbWUiOm51bGwsImV2ZW50SWQiOjAsImlkZW50aWZ5SWQiOjAsInNlcXVlbmNlTnVtYmVyIjowfQ==; ajs_user_id=e44098508faf888ed71a76ed407b8831bad1d2e65bbe500ba75b629dee170c45; ajs_anonymous_id=9106f74a-1291-41b0-9d26-60b4ec1ee439; ajs_group_id=BEW1-OXXH-RIZ6-B6K4; amplitude_id_cf620211dc906be4ab7c92f52766759ddpsb.ir=eyJkZXZpY2VJZCI6Ijg4ODk0ZGI0LWYxMmYtNGE2Mi1iZDM4LTU0Njg3OWUzNjBhNlIiLCJ1c2VySWQiOiJlNDQwOTg1MDhmYWY4ODhlZDcxYTc2ZWQ0MDdiODgzMWJhZDFkMmU2NWJiZTUwMGJhNzViNjI5ZGVlMTcwYzQ1Iiwib3B0T3V0IjpmYWxzZSwic2Vzc2lvbklkIjoxNzkxNDQ0MjY4MTcwLCJsYXN0RXZlbnRUaW1lIjoxNzkxNDQ0MzM4NTU0LCJldmVudElkIjoyNywiaWRlbnRpZnlJZCI6MTIsInNlcXVlbmNlTnVtYmVyIjozOX0=; access_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkxNDUzOTA1LCJpYXQiOjE3OTE0MzU5MzIsImp0aSI6IjRjZjI1MmU4ZmYxYjRiNzBhOTc2ZWUxM2IyMDQ5M2IwIiwidXNlcl9pZCI6IjJjZmVhNmFkLTM0MmMtNDNiNS05ZmM1LTYxZTVmNDJkNTQ1OSIsInJlZnJlc2hfanRpIjoiOTliNWRkZGZjNTZlNDNiMGEzZjg3ODFiOTNmMTJlZjUifQ.VY0R4ktE7j3SkT_Wyk7guHwt6hyX9TEx0sGDllX0KTbW1SPcGoe9b4ItaTRH0evn_MCEykAZ4v0d-H7tItqwvA; is_logged_in=true
+    - name: origin
+      value: https://stage.dpsb.ir
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://stage.dpsb.ir/
+    - name: sec-ch-ua
+      value: '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"'
+    - name: sec-ch-ua-mobile
+      value: ?0
+    - name: sec-ch-ua-platform
+      value: '"Windows"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36
+  body:
+    type: json
+    data: |-
+      {
+        "title": "{{product_title}}",
+        "price":{{product_price}},
+        "price_doto": null,
+        "stock":{{product_stock}}
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const products = [
+          {
+            title: "Galaxy Samsung A56 5G",
+            content: "سامسونگ Galaxy A56 5G با نمایشگر Super AMOLED، دوربین قدرتمند و باتری 5000 میلی‌آمپرساعتی؛ انتخابی مناسب برای استفاده روزمره و حرفه‌ای.",
+            price: 110000,
+            price_doto: null,
+            stock: 14
+          },
+          {
+            title: "iPhone 17 Pro",
+            content: "آیفون 17 پرو با طراحی پریمیوم، دوربین پیشرفته، پردازنده قدرتمند و نمایشگر باکیفیت برای کاربران حرفه‌ای.",
+            price: 185000,
+            price_doto: null,
+            stock: 8
+          },
+          {
+            title: "Samsung Galaxy S25 Ultra",
+            content: "Galaxy S25 Ultra با نمایشگر بزرگ، دوربین حرفه‌ای، قلم S Pen و عملکرد قدرتمند یکی از پرچم‌داران سامسونگ است.",
+            price: 175000,
+            price_doto: null,
+            stock: 6
+          },
+          {
+            title: "Xiaomi 15 Pro",
+            content: "Xiaomi 15 Pro با پردازنده قدرتمند، نمایشگر AMOLED و سیستم دوربین حرفه‌ای، گزینه‌ای مناسب برای کاربران حرفه‌ای است.",
+            price: 135000,
+            price_doto: null,
+            stock: 12
+          },
+          {
+            title: "Google Pixel 10 Pro",
+            content: "Pixel 10 Pro با دوربین قدرتمند، تجربه خالص اندروید و قابلیت‌های هوش مصنوعی گوگل عرضه شده است.",
+            price: 145000,
+            price_doto: null,
+            stock: 9
+          },
+          {
+            title: "OnePlus 13",
+            content: "OnePlus 13 با عملکرد سریع، نمایشگر با نرخ نوسازی بالا و باتری قدرتمند برای کاربران علاقه‌مند به عملکرد بالا طراحی شده است.",
+            price: 120000,
+            price_doto: null,
+            stock: 15
+          },
+          {
+            title: "Sony WH-1000XM6",
+            content: "هدفون Sony WH-1000XM6 با حذف نویز فعال، کیفیت صدای بالا و طراحی راحت برای استفاده طولانی‌مدت مناسب است.",
+            price: 75000,
+            price_doto: null,
+            stock: 20
+          },
+          {
+            title: "Apple Watch Ultra 3",
+            content: "Apple Watch Ultra 3 با طراحی مقاوم، قابلیت‌های ورزشی پیشرفته و امکانات هوشمند برای کاربران حرفه‌ای طراحی شده است.",
+            price: 95000,
+            price_doto: null,
+            stock: 7
+          },
+          {
+            title: "Samsung Galaxy Buds 4 Pro",
+            content: "Galaxy Buds 4 Pro با کیفیت صدای بالا، حذف نویز فعال و اتصال سریع به دستگاه‌های سامسونگ ارائه شده است.",
+            price: 42000,
+            price_doto: null,
+            stock: 25
+          },
+          {
+            title: "MacBook Air M4",
+            content: "MacBook Air با تراشه M4، طراحی باریک و سبک، عمر باتری بالا و عملکرد مناسب برای کارهای روزمره و حرفه‌ای.",
+            price: 210000,
+            price_doto: null,
+            stock: 5
+          }
+        ];
+
+        // انتخاب Random یک محصول کامل
+        const selectedProduct = products[Math.floor(Math.random() * products.length)];
+
+        // ذخیره متغیرها
+        bru.setVar("product_title", selectedProduct.title);
+        bru.setVar("product_content", selectedProduct.content);
+        bru.setVar("product_price", selectedProduct.price);
+        bru.setVar("product_price_doto", selectedProduct.price_doto);
+        bru.setVar("product_stock", selectedProduct.stock);
+
+        // نمایش در Console
+        console.log("Selected Product:", selectedProduct);
+        console.log("Title:", selectedProduct.title);
+        console.log("Content:", selectedProduct.content);
+        console.log("Price:", selectedProduct.price);
+        console.log("Price DOTO:", selectedProduct.price_doto);
+        console.log("Stock:", selectedProduct.stock);
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 200", function() {
+            expect(res.status).to.equal(200);
+
+          });
+
+          test("Response time should be less than 500 ms", function() {
+            expect(res.responseTime).to.be.lessThan(500);
+          });
+        }
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
