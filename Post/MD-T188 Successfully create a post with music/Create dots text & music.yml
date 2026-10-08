@@ -1,0 +1,125 @@
+info:
+  name: Create dots text & music
+  type: http
+  seq: 2
+
+http:
+  method: post
+  url: "{{Url}}/dots/"
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: origin
+      value: https://mydot.one
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://mydot.one/
+    - name: sec-ch-ua
+      value: '"Chromium";v="152", "Not?A_Brand";v="24", "Google Chrome";v="152"'
+    - name: sec-ch-ua-mobile
+      value: ?1
+    - name: sec-ch-ua-platform
+      value: '"iOS"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1
+  body:
+    type: json
+    data: |-
+      {
+        "dot_type": "dot",
+        "content": "# {{post_title}}\n\n{{post_description}}",
+        "reply_to": null,
+        "repost_of": null,
+        "quote_of": null,
+        "media_ids": [
+          "{{Music_id}}"
+        ],
+        "reply_permission": "everyone"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const music = [
+          {
+            title: "Blinding Lights",
+            description: "یکی از محبوب‌ترین قطعات The Weeknd با فضای سینث‌پاپ و ریتمی پرانرژی.",
+            music_id: "db7d9d6b-a511-4cd7-881c-07dc63d3c0ac"
+          },
+          {
+            title: "Shape of You",
+            description: "قطعه‌ای محبوب از Ed Sheeran با ریتم پاپ و فضای مناسب برای یک پست موسیقی.",
+            music_id: "db7d9d6b-a511-4cd7-881c-07dc63d3c0ac"
+          },
+          {
+            title: "Believer",
+            description: "قطعه قدرتمند Imagine Dragons با فضای حماسی و انرژی بالا.",
+            music_id: "db7d9d6b-a511-4cd7-881c-07dc63d3c0ac"
+          },
+          {
+            title: "Perfect",
+            description: "یکی از قطعات عاشقانه و محبوب Ed Sheeran.",
+            music_id: "4b7d63ba-cbe7-4c45-a1bd-0dec4e6a0276"
+          },
+          {
+            title: "Stay",
+            description: "قطعه‌ای پرانرژی از The Kid LAROI و Justin Bieber.",
+            music_id: "4b7d63ba-cbe7-4c45-a1bd-0dec4e6a0276"
+          },
+          {
+            title: "As It Was",
+            description: "قطعه‌ای مدرن و محبوب از Harry Styles با فضای پاپ متفاوت.",
+            music_id: "4b7d63ba-cbe7-4c45-a1bd-0dec4e6a0276"
+          }
+        ];
+
+        // انتخاب Random یک موزیک کامل
+        const selectedMusic = music[Math.floor(Math.random() * music.length)];
+
+        // ذخیره متغیرها
+        bru.setVar("music_title", selectedMusic.title);
+        bru.setVar("music_description", selectedMusic.description);
+        bru.setVar("Music_id", selectedMusic.music_id);
+
+        // نمایش در Console
+        console.log("Selected Music:", selectedMusic);
+    - type: after-response
+      code: |-
+        const dotId = res.body.id;
+
+        bru.setVar("dot_id", dotId);
+    - type: tests
+      code: |-
+        tests :{
+          test("Status code should be 201", function() {
+            expect(res.status).to.equal(201);
+          });
+
+          test("Response time should be less than 1000 ms", function() {
+            expect(res.responseTime).to.be.lessThan(1000);
+          });
+        }
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

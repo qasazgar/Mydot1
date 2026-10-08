@@ -309,7 +309,11 @@ pipeline {
                         ],[
                             name: 'MD-T3 Create Post (Text + Video)',
                             report: 'md-t3'
-                        ],
+                        ],[
+                            name: 'MD-T188 Successfully create a post with music',
+                            report:'md-t188'
+                        ]
+                     
                     ]
 
                     for (scenario in scenarios) {
