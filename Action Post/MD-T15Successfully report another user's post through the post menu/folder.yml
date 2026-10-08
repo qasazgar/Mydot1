@@ -1,0 +1,7 @@
+info:
+  name: MD-T15Successfully report another user's post through the post menu
+  type: folder
+  seq: 8
+
+request:
+  auth: inherit

@@ -1,0 +1,99 @@
+info:
+  name: report
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{Url}}/dots/e42ec8ec-e759-490a-b552-0585d931a96f/report/"
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-GB,en;q=0.9,fa-IR;q=0.8,fa;q=0.7,en-US;q=0.6
+    - name: cache-control
+      value: no-cache
+    - name: content-type
+      value: application/json
+    - name: Cookie
+      value: csrftoken=CEjBWVNOye3eC52f0pUVstC7wLQW5lck; amplitude_idundefineddpsb.ir=eyJvcHRPdXQiOmZhbHNlLCJzZXNzaW9uSWQiOm51bGwsImxhc3RFdmVudFRpbWUiOm51bGwsImV2ZW50SWQiOjAsImlkZW50aWZ5SWQiOjAsInNlcXVlbmNlTnVtYmVyIjowfQ==; access_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzkxNDM3NzMyLCJpYXQiOjE3OTE0MzU5MzIsImp0aSI6IjI5MDQzODJmZDhlMTRmYTJhMGFhZTFmMmM3N2JkYjhkIiwidXNlcl9pZCI6IjJjZmVhNmFkLTM0MmMtNDNiNS05ZmM1LTYxZTVmNDJkNTQ1OSIsInJlZnJlc2hfanRpIjoiOTliNWRkZGZjNTZlNDNiMGEzZjg3ODFiOTNmMTJlZjUifQ.g8dBRe_PBD5j6TyeHzwSpS9dTQ7fjv-qKvQ4wJzPHQJpT0TuU73jQvNG9kpBhtbyXkxG_pVnuceqpw_0M1p2ag; is_logged_in=true; ajs_user_id=e44098508faf888ed71a76ed407b8831bad1d2e65bbe500ba75b629dee170c45; ajs_anonymous_id=9106f74a-1291-41b0-9d26-60b4ec1ee439; ajs_group_id=BEW1-OXXH-RIZ6-B6K4; amplitude_id_cf620211dc906be4ab7c92f52766759ddpsb.ir=eyJkZXZpY2VJZCI6Ijg4ODk0ZGI0LWYxMmYtNGE2Mi1iZDM4LTU0Njg3OWUzNjBhNlIiLCJ1c2VySWQiOiJlNDQwOTg1MDhmYWY4ODhlZDcxYTc2ZWQ0MDdiODgzMWJhZDFkMmU2NWJiZTUwMGJhNzViNjI5ZGVlMTcwYzQ1Iiwib3B0T3V0IjpmYWxzZSwic2Vzc2lvbklkIjoxNzkxNDM1OTU1Nzg4LCJsYXN0RXZlbnRUaW1lIjoxNzkxNDM2MDkwNjgxLCJldmVudElkIjoxMiwiaWRlbnRpZnlJZCI6Nywic2VxdWVuY2VOdW1iZXIiOjE5fQ==
+    - name: origin
+      value: https://stage.dpsb.ir
+    - name: pragma
+      value: no-cache
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://stage.dpsb.ir/
+    - name: sec-ch-ua
+      value: '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"'
+    - name: sec-ch-ua-mobile
+      value: ?0
+    - name: sec-ch-ua-platform
+      value: '"Windows"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36
+  body:
+    type: json
+    data: |-
+      {
+        "reason": "{{reason}}",
+        "description": "{{description}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: before-request
+      code: |-
+        const reports = [
+          {
+            reason: "harassment",
+            description: "This content contains harassment or targeted abusive behavior."
+          },
+          {
+            reason: "misinformation",
+            description: "This content contains misleading or false information."
+          },
+          {
+            reason: "obscene",
+            description: "This content contains obscene or inappropriate material."
+          },
+          {
+            reason: "spam",
+            description: "This content appears to be spam or unwanted promotional content."
+          },
+          {
+            reason: "hate",
+            description: "This content contains hateful or discriminatory content."
+          },
+          {
+            reason: "other",
+            description: "This content violates the platform rules for another reason."
+          }
+        ];
+
+        // انتخاب Random یک گزارش
+        const selectedReport = reports[Math.floor(Math.random() * reports.length)];
+
+        // ذخیره متغیرها
+        bru.setVar("reason", selectedReport.reason);
+        bru.setVar("description", selectedReport.description);
+
+        // نمایش در Console
+        console.log("Selected Report:", selectedReport);
+        console.log("Reason:", selectedReport.reason);
+        console.log("Description:", selectedReport.description);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
