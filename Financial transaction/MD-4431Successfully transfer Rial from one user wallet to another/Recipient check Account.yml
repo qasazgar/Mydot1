@@ -1,0 +1,64 @@
+info:
+  name: Recipient check Account
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{Url}}/auth/login/"
+  headers:
+    - name: sec-ch-ua-platform
+      value: '"Windows"'
+    - name: Referer
+      value: https://stage.dpsb.ir/
+    - name: User-Agent
+      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36
+    - name: Accept
+      value: application/json, text/plain, */*
+    - name: sec-ch-ua
+      value: '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"'
+    - name: Content-Type
+      value: application/json
+    - name: sec-ch-ua-mobile
+      value: ?0
+  body:
+    type: json
+    data: |-
+      {
+        "identifier": "{{User2}}",
+        "password": "{{Password2}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        test("Status code is 200", () => {
+          expect(res.status).to.equal(200);
+        });
+
+        test("Response time is less than 3000ms", () => {
+          expect(res.responseTime).to.be.below(3000);
+        });
+
+        let data = res.body;
+
+        if (typeof data === "string") {
+          data = JSON.parse(data);
+        }
+
+        const isActive = data.user?.is_active;
+
+        if (isActive === true) {
+          console.log("✅ کاربر دریافت‌کننده دارای حساب کاربری فعال می‌باشد");
+        } else if (isActive === false) {
+          console.log("❌ کاربر دریافت‌کننده حساب کاربری فعال ندارد");
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

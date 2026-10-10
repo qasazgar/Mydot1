@@ -1,0 +1,23 @@
+info:
+  name: MD-4431Successfully transfer Rial from one user wallet to another
+  type: folder
+  seq: 1
+
+request:
+  auth: inherit
+
+docs:
+  content: |-
+    <span>  Given the user is logged into their account</span>\
+    <span>  And the user's Rial wallet balance is at least 100000 Rial</span>\
+    <span>  And the recipient has an active account</span>\
+    <span>  When the user enters 100000 Rial as the transfer amount</span>\
+    <span>  And confirms the recipient's username or identifier</span>\
+    <span>  And clicks the "Transfer Rial" button</span>\
+    <span>  And confirms the transfer</span>\
+    <span>  Then the transfer should be completed successfully</span>\
+    <span>  And 100000 Rial should be deducted from the sender's wallet balance</span>\
+    <span>  And 100000 Rial should be added to the recipient's wallet balance</span>\
+    <span>  And the transaction should be recorded in the transaction history</span>\
+    <span>  And the transaction status should be displayed as "Successful"</span>
+  type: text/markdown

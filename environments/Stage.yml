@@ -2,31 +2,55 @@ name: Stage
 variables:
   - name: Url
     value: https://api-stage.dpsb.ir/mydot/api/v1
+    description: ""
   - name: access_token
     value: ""
+    description: ""
   - name: dot_id_Quote
     value: ""
+    description: ""
   - name: Otp
     value: ""
+    description: ""
   - name: pre_auth_token
     value: ""
+    description: ""
   - name: randomMobile
     value: ""
+    description: ""
   - name: eligibility_token
     value: Q50TDRiJeGaPtOoAcVzmnCHePW1SMhWFfgE9iaa-sWk
+    description: ""
   - name: User1
     value: sazgar7
+    description: ""
   - name: Password
     value: Ahmad@123
+    description: ""
   - name: invalid_phone_number
     value: "09120000000"
+    description: ""
   - name: phone_number
     value: "09127988405"
+    description: ""
   - name: Invalid_Otp
     value: "123456"
+    description: ""
   - name: dot_id
     value: 2d1103c8-4f92-4068-8a78-26980e793b11
+    description: ""
   - name: message
     value: You are not allowed to reply to this dot.
+    description: ""
   - name: Product_id
     value: 46a768db-444c-462c-b643-875320fb199a
+    description: ""
+  - name: User2
+    value: Automation
+    description: ""
+  - name: Password2
+    value: Kk123456
+    description: ""
+  - name: amount_irr
+    value: "100000"
+    description: ""

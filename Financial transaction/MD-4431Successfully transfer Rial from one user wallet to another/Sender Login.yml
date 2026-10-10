@@ -1,0 +1,103 @@
+info:
+  name: Sender Login
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{Url}}/auth/login/"
+  headers:
+    - name: accept
+      value: application/json, text/plain, */*
+    - name: accept-language
+      value: en-US,en;q=0.9,fa-IR;q=0.8,fa;q=0.7
+    - name: content-type
+      value: application/json
+    - name: Cookie
+      value: amplitude_idundefineddpsb.ir=eyJvcHRPdXQiOmZhbHNlLCJzZXNzaW9uSWQiOm51bGwsImxhc3RFdmVudFRpbWUiOm51bGwsImV2ZW50SWQiOjAsImlkZW50aWZ5SWQiOjAsInNlcXVlbmNlTnVtYmVyIjowfQ==; ajs_user_id=0e6ca19084243e1aec287f62ca6fc06f0a23c423675122ed14a566ecdbdbccd6; ajs_anonymous_id=2cef3627-7769-461c-9d28-9625b361576f; ajs_group_id=BEW1-OXXH-RIZ6-B6K4; amplitude_id_cf620211dc906be4ab7c92f52766759ddpsb.ir=eyJkZXZpY2VJZCI6IjhmN2VjMDUxLTJhMGMtNGY0ZC1iMmRkLWY0MzRjN2NlOGI0Y1IiLCJ1c2VySWQiOiIwZTZjYTE5MDg0MjQzZTFhZWMyODdmNjJjYTZmYzA2ZjBhMjNjNDIzNjc1MTIyZWQxNGE1NjZlY2RiZGJjY2Q2Iiwib3B0T3V0IjpmYWxzZSwic2Vzc2lvbklkIjoxNzkwNTkxMzA0MzE5LCJsYXN0RXZlbnRUaW1lIjoxNzkwNTk0MTg4MjUxLCJldmVudElkIjozOSwiaWRlbnRpZnlJZCI6MzEsInNlcXVlbmNlTnVtYmVyIjo3MH0=
+    - name: origin
+      value: https://stage.dpsb.ir
+    - name: priority
+      value: u=1, i
+    - name: referer
+      value: https://stage.dpsb.ir/
+    - name: sec-ch-ua
+      value: '"Chromium";v="154", "Google Chrome";v="154", "Not A(Brand";v="99"'
+    - name: sec-ch-ua-mobile
+      value: ?0
+    - name: sec-ch-ua-platform
+      value: '"Windows"'
+    - name: sec-fetch-dest
+      value: empty
+    - name: sec-fetch-mode
+      value: cors
+    - name: sec-fetch-site
+      value: same-site
+    - name: user-agent
+      value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36
+  body:
+    type: json
+    data: |-
+      {
+        "identifier": "{{User1}}",
+        "password": "{{Password}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        let responseData = res.body;
+
+        if (typeof responseData === "string") {
+          try {
+            responseData = JSON.parse(responseData);
+          } catch (error) {
+            responseData = {};
+          }
+        }
+
+        test("Status code is 200", () => {
+          expect(res.status).to.equal(200);
+        });
+
+        test("Response time is less than 3000ms", () => {
+          expect(res.responseTime).to.be.below(3000);
+        });
+
+        if (
+          responseData.user &&
+          responseData.user.id
+        ) {
+          console.log("✅ ورود با نام کاربری و رمز عبور با موفقیت انجام شد");
+        } else {
+          console.log("❌ ورود انجام نشد");
+        }
+
+        // Get Set-Cookie
+        const setCookie = res.getHeader("set-cookie");
+
+        if (setCookie) {
+          const cookieString = Array.isArray(setCookie)
+            ? setCookie.join("; ")
+            : String(setCookie);
+
+          const accessTokenMatch = cookieString.match(/access_token=([^;]+)/);
+
+          if (accessTokenMatch) {
+            bru.setVar("access_token", accessTokenMatch[1]);
+            console.log("✅ access_token با موفقیت ذخیره شد");
+          } else {
+            console.log("❌ access_token در Response پیدا نشد");
+          }
+        } else {
+          console.log("❌ Set-Cookie در Response وجود ندارد");
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
